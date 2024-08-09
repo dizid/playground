@@ -1,0 +1,42 @@
+A Vue 3 component with a form having two fields, name1 and name2,
+which generates a random score between 1 and 10 on submission.
+The form data and the generated score are then saved in a cookie.
+Display the random score on screen.
+
+
+A Vue 3 component that shows advice from https://api.adviceslip.com/advice on screen.
+Next create a search box and show the search results from https://api.adviceslip.com/advice
+
+The returned (example) search object from https://api.adviceslip.com/advice has the following format:
+{
+"total_results": "2",
+"slips": [
+{
+"advice": "Remember that spiders are more afraid of you, than you are of them."
+},
+{
+"advice":"Smile and the world smiles with you. Frown and you're on your own."
+}
+]
+}
+
+total_results integer Total number of matching advice slips found.
+query integer The search query provided.
+slips string An array of slip objects matching the search query.
+
+If there are no results for the search query, show a message on screen that says: No results
+
+
+It worked! But i changed my request a bit:
+Create a search box where user can type a keyword and search for movies in
+http://www.omdbapi.com/?apikey=10a8315&t='searchterm'
+If there are no result, display a message.
+Clear the movie results array whenever the search term changes.
+Make the button responsive again for the next search.
+You can find the API endpoint specifications on this webpage: https://www.omdbapi.com/
+Shows the results including the "Internet Movie Database" rating.
+
+In Vue 3, what is the difference between these 2 ways writing / initializing?
+1. export default {
+data()
+2.setup() {
