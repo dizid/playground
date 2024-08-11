@@ -5,7 +5,7 @@
       <h1>Search for advice:</h1>
       <form @submit.prevent="searchForAdvice">
         <input type="text" v-model="searchQuery" placeholder="Type a keyword..." />
-        <button type="submit">Search</button>
+      <p>  <button type="submit">Search</button></p>
       </form>
   
       <ul v-if="searchResults.length > 0">

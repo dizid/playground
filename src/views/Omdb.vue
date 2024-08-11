@@ -3,7 +3,7 @@
       <h1>Search Movies:</h1>
       <form @submit.prevent="searchForMovies">
         <input type="text" v-model="searchTerm" placeholder="Enter movie keyword..." />
-        <button type="submit">Search</button>
+       <p> <button type="submit">Search</button></p>
       </form>
   
       <p v-if="!movieResults || !movieResults.length">No results found.</p>

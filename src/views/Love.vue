@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>The love Calculator</h1>
+        <h1>The <i class="fa fa-heart"></i> Calculator</h1>
     <h2>How well do you match with your partner?</h2>
       <form @submit.prevent="handleSubmit">
         <input type="text" v-model="formData.name1" placeholder="Your name" />
@@ -40,3 +40,9 @@
     }
   }
   </script>
+
+  <style>
+.fa.fa-heart {
+  color: red;
+}
+</style>

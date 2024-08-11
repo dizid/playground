@@ -1,8 +1,7 @@
 <template>
   <header>
-    <p>Dizid Dev Playground</p>
+   
   </header>
-
   <nav>
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/age">Guess your Age</RouterLink>

@@ -16,7 +16,7 @@
   --line-height: 1.618;
 
   /* Default (light) theme */
-  --bg: rgb(253, 245, 226);
+  --bg: rgb(190, 235, 248);
   --accent-bg: #feca70;
   --text: #29075f;
   --text-light: #585858;
@@ -76,10 +76,20 @@ body {
 /* Make the header bg full width, but the content inline with body */
 header {
   background: var(--accent-bg);
+  background-image: url('header-logo.png');
+
+  /* Other background properties */
+  background-position: center;
+  /* background-size: cover; */
+  background-repeat: no-repeat;
+  background-color: #121827;
+
   border-bottom: 1px solid var(--border);
   text-align: center;
   padding: 2rem 0.5rem;
   width: 100vw;
+  height: 157px;
+  /* Changed Set the desired height */
   position: relative;
   box-sizing: border-box;
   left: 50%;
@@ -94,10 +104,10 @@ header p {
   margin: 0;
 }
 
-/* Add a little padding to ensure spacing is correct between content and nav */
+/* CHANGED Add a little padding to ensure spacing is correct between content and nav 
 main {
   padding-top: 1.5rem;
-}
+} */
 
 /* Fix line height when title wraps */
 h1,
@@ -114,6 +124,8 @@ nav {
 }
 
 nav a {
+  background-color: #82c2f7;
+
   margin: 1rem 1rem 0 0;
   border: 1px solid var(--border);
   border-radius: 5px;
@@ -134,7 +146,7 @@ nav a.current:hover {
 }
 
 footer {
-  margin-top: 4rem;
+  margin-top: 1rem;
   padding: 2rem 1rem 1.5rem 1rem;
   color: var(--text-light);
   font-size: 0.9rem;
@@ -318,7 +330,7 @@ input {
   padding: 0.5rem;
   margin-bottom: 0.5rem;
   color: var(--text);
-  background: var(--bg);
+  background: #c0ccf2;
   border: 1px solid var(--border);
   border-radius: 5px;
   box-shadow: none;
