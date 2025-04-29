@@ -49,7 +49,7 @@ const error = ref('');
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_CHATGPT_APIKEY,
   organization: import.meta.env.VITE_CHATGPT_ORG,
-  dangerouslyAllowBrowser: true // Only for development/localhost!
+  // dangerouslyAllowBrowser: true // Only for development/localhost!
 });
 
 async function sendMessage() {
