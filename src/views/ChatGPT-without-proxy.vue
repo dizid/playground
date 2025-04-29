@@ -1,4 +1,13 @@
 <template>
+  <!-- 
+  Without proxy i get this:
+  It looks like you're running in a browser-like environment.
+
+  This is disabled by default, as it risks exposing your secret API credentials to attackers.
+  If you understand the risks and have appropriate mitigations in place,
+  you can set the `dangerouslyAllowBrowser` option to `true`, e.g., -->
+
+
   <div id="chat-container">
     <h2>Chat with ChatGPT</h2>
 
@@ -15,28 +24,20 @@
 
     <!-- Conversation messages -->
     <div class="messages-container">
-      <div v-for="(message, index) in messages" :key="index" 
-           class="message" 
-           :class="message.role">
+      <div v-for="(message, index) in messages" :key="index" class="message" :class="message.role">
         <strong>{{ message.role === 'user' ? 'You' : 'ChatGPT' }}:</strong> {{ message.content }}
       </div>
     </div>
 
     <!-- Input field for user to send a message -->
     <div class="input-container">
-      <input 
-        type="text" 
-        id="user-input" 
-        v-model="inputValue" 
-        @keyup.enter="sendMessage"
-        :disabled="isLoading"
-        placeholder="Type your message..."
-      />
+      <input type="text" id="user-input" v-model="inputValue" @keyup.enter="sendMessage" :disabled="isLoading"
+        placeholder="Type your message..." />
       <button @click="sendMessage" :disabled="isLoading || !inputValue.trim()">
         {{ isLoading ? 'Sending...' : 'Send' }}
       </button>
     </div>
-    
+
     <div v-if="error" class="error-message">
       {{ error }}
     </div>
@@ -45,6 +46,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import OpenAI from "openai";
 
 const inputValue = ref('');
 const messages = ref([]);
@@ -52,40 +54,48 @@ const extraInstruction = ref('');
 const isLoading = ref(false);
 const error = ref('');
 
+// Initialize the OpenAI client
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_CHATGPT_APIKEY,
+  organization: import.meta.env.VITE_CHATGPT_ORG,
+  dangerouslyAllowBrowser: true // Only for development/localhost!
+});
+
 async function sendMessage() {
   if (!inputValue.value.trim() || isLoading.value) return;
   error.value = '';
   isLoading.value = true;
-  
+
   try {
     // Add user message to chat
     const userMessage = inputValue.value;
     messages.value.push({ role: 'user', content: userMessage });
-    
-    // Send request to Netlify function instead of directly to OpenAI
-    const response = await fetch('/.netlify/functions/openai-proxy', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        messages: messages.value.map(msg => ({ 
-          role: msg.role, 
-          content: msg.content 
-        })),
-        extraInstruction: extraInstruction.value
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Server responded with status: ${response.status}`);
+
+    // Prepare system message with personality if selected
+    let systemMessage = "You are a helpful assistant.";
+    if (extraInstruction.value) {
+      systemMessage = `You are a helpful assistant with a ${extraInstruction.value} personality. Always respond in a ${extraInstruction.value} tone.`;
     }
-    
-    const result = await response.json();
-    
-    // Add response to messages
-    messages.value.push({ role: 'assistant', content: result.message });
-    
+
+    // Prepare API request
+    const chatMessages = [
+      { role: "system", content: systemMessage },
+      ...messages.value.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }))
+    ];
+
+    // Make API call
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: chatMessages
+    });
+
+    // Get and display response
+    const responseMessage = completion.choices[0].message.content;
+    messages.value.push({ role: 'assistant', content: responseMessage });
+
     // Clear input
     inputValue.value = '';
   } catch (err) {
