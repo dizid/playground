@@ -1,4 +1,4 @@
-// netlify/functions/openai-proxy.js
+// netlify/functions/openai-proxy.js  
 
 // Load environment variables from .env file during development
 if (process.env.NODE_ENV !== 'production') {

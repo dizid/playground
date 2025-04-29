@@ -1,6 +1,6 @@
 <template>
 
-  <!-- this should use the proxy in netlify/functions -->
+  <!-- this shou ld use the proxy in netlify/functions -->
 
 
   <div id="chat-container">
