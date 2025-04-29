@@ -60,13 +60,13 @@ const currentPersonaDisplay = computed(() => {
       return 'Bruce';
     case 'Very broken, short, english, always talks about money and costs and profit, Luddite, incomprehensible, hard to understand':
       return 'Giomoney';
-    case 'English, talks very drunk and stoned, has hearing problems, ':
+    case 'English, talks very drunk and stoned, has hearing problems ':
       return 'Marc';
-    case 'English, Psychologizer, guru, wise, Luddite, keep it short ':
+    case 'English, Psychologizer, guru, wise, Luddite, keep it short':
       return 'Alun';
     case 'Only speaks French with a few English words mixed in, very cheerfull, keep it short':
       return 'Marco';
-    case 'English, only uses words like happy, happy, ohh yes, thats right, Great, thats good, keep it short':
+    case 'English, only uses words like happy, happy, ohh yes, thats right, thats good, keep it short':
       return 'Nick';
     default:
       return 'ChatGPT'; // Default name if no persona is selected
