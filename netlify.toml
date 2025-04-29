@@ -1,12 +1,8 @@
-[
-build
-]
+[build]
   # If you're using a framework with a different build command, replace it here
   command = "npm run build"
   functions = "netlify/functions"
-  publish = "dist"  # If using Vite, this is typically "dist"
+  publish = "dist"
 
-[
-dev
-]
+[dev]
   functions = "netlify/functions"  # For local netlify dev
