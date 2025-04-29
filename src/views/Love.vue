@@ -7,7 +7,7 @@
         <input type="text" v-model="formData.name2" placeholder="Your lovers'name" />
        <p> <button type="submit">Calculate!</button></p>
       </form>
-      <p v-if="score !== null">From 1 to 10 you fit together: {{ score }}</p>
+      <h2 v-if="score !== null">From 1 to 10 you fit together: <span style="color:red;">{{ score }}</span></h2>
     </div>
   </template>
   

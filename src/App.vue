@@ -4,11 +4,14 @@
   </header>
   <nav>
     <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/age">We guess your Age</RouterLink>
+    <RouterLink to="/age">Guess your Age</RouterLink>
     <RouterLink to="/love">Love calculator</RouterLink>
     <RouterLink to="/advice">Need advice?</RouterLink>
     <!-- <RouterLink to="/analyzer">Sentiment Analyzer</RouterLink> -->
     <RouterLink to="/movie">Movies</RouterLink>
+    <RouterLink to="/grumpy-old-man">Grumpy AI</RouterLink>
+    
+    
   </nav>
   <main>
     <RouterView />

@@ -40,3 +40,24 @@ In Vue 3, what is the difference between these 2 ways writing / initializing?
 1. export default {
 data()
 2.setup() {
+
+
+ChatGPT
+
+Vue 3 component that does a conversation with the chatgtp API. 
+Add a variable for extra prompt instructions 'grumpy', 'sweet', 'slimey' with every API call and make a selection box in the GUI for those.
+Use the official Node.js library,  Documentation for the chatgpt API is here: https://platform.openai.com/docs/api-reference/introduction
+Use Vue 3 and do not use the @vue/composition-api. 
+Use the Vue 3 Setup construction
+
+I use the openai library version  v4, 
+Vue version @vue/cli 5.0.8 and
+Node v18.6.0
+
+Use model: gpt-4o-mini
+Do not use 'max tokens'
+
+The migration documentation from openai v3 to v4 is here:
+https://github.com/openai/openai-node/discussions/217
+Here is the full API doumentation for openai:
+https://platform.openai.com/docs/api-reference

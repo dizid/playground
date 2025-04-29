@@ -34,9 +34,16 @@ const router = createRouter({
       name: 'movie',
       component: () => import('../views/Omdb.vue')
     },
+    {
+      path: '/grumpy-old-man',
+      name: 'grumpy-old-man',
+      component: () => import('../views/ChatGPT.vue')
+    },
 
 
   ]
 })
 
 export default router
+
+

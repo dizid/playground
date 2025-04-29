@@ -12,8 +12,8 @@
      <li><a href="https://geluk.tnxz.nl/" target="_blank">Find happiness <i class="fa fa-smile"></i></a></li> 
      <li><a href=" https://3p.tnxz.nl/" target="_blank">Helpt bij beslissingen! Poen, Pret en Prestige...</a></li>
      <li><a href=" https://google4games.com/" target="_blank">Google 4 Games</a></li>
-     <li><a href=" https://palmdetective.mystrikingly.com/" target="_blank">Palmdetective</a></li>
-     
+     <li><a href=" https://palmdetective.mystrikingly.com/" target="_blank">Palmdetective</a> </li>
+     <!-- https://wonderlandpublisher.wixsite.com/marcderuyter -->
     </ul>
     
     
