@@ -15,28 +15,20 @@
 
     <!-- Conversation messages -->
     <div class="messages-container">
-      <div v-for="(message, index) in messages" :key="index" 
-           class="message" 
-           :class="message.role">
+      <div v-for="(message, index) in messages" :key="index" class="message" :class="message.role">
         <strong>{{ message.role === 'user' ? 'You' : 'ChatGPT' }}:</strong> {{ message.content }}
       </div>
     </div>
 
     <!-- Input field for user to send a message -->
     <div class="input-container">
-      <input 
-        type="text" 
-        id="user-input" 
-        v-model="inputValue" 
-        @keyup.enter="sendMessage"
-        :disabled="isLoading"
-        placeholder="Type your message..."
-      />
+      <input type="text" id="user-input" v-model="inputValue" @keyup.enter="sendMessage" :disabled="isLoading"
+        placeholder="Type your message..." />
       <button @click="sendMessage" :disabled="isLoading || !inputValue.trim()">
         {{ isLoading ? 'Sending...' : 'Send' }}
       </button>
     </div>
-    
+
     <div v-if="error" class="error-message">
       {{ error }}
     </div>
@@ -57,44 +49,44 @@ const error = ref('');
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_CHATGPT_APIKEY,
   organization: import.meta.env.VITE_CHATGPT_ORG,
- // dangerouslyAllowBrowser: true // Only for development/localhost!
+  dangerouslyAllowBrowser: true // Only for development/localhost!
 });
 
 async function sendMessage() {
   if (!inputValue.value.trim() || isLoading.value) return;
   error.value = '';
   isLoading.value = true;
-  
+
   try {
     // Add user message to chat
     const userMessage = inputValue.value;
     messages.value.push({ role: 'user', content: userMessage });
-    
+
     // Prepare system message with personality if selected
     let systemMessage = "You are a helpful assistant.";
     if (extraInstruction.value) {
       systemMessage = `You are a helpful assistant with a ${extraInstruction.value} personality. Always respond in a ${extraInstruction.value} tone.`;
     }
-    
+
     // Prepare API request
     const chatMessages = [
       { role: "system", content: systemMessage },
-      ...messages.value.map(msg => ({ 
-        role: msg.role, 
-        content: msg.content 
+      ...messages.value.map(msg => ({
+        role: msg.role,
+        content: msg.content
       }))
     ];
-    
+
     // Make API call
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: chatMessages
     });
-    
+
     // Get and display response
     const responseMessage = completion.choices[0].message.content;
     messages.value.push({ role: 'assistant', content: responseMessage });
-    
+
     // Clear input
     inputValue.value = '';
   } catch (err) {
