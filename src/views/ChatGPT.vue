@@ -1,6 +1,6 @@
 <template>
 
-  <!-- this shou ld use the proxy in netlify/functions -->
+  <!-- this page uses the proxy in netlify/functions/openai-proxy.js -->
 
 
   <div id="chat-container">
@@ -11,9 +11,11 @@
       <label for="instruction-select">Personality:</label>
       <select id="instruction-select" v-model="extraInstruction">
         <option value="">None</option>
-        <option value="grumpy">Grumpy</option>
-        <option value="sweet">Sweet</option>
-        <option value="slimey">Slimey</option>
+        <option value="grumpy, cynical, old man who hates people">Bruce</option>
+        <option value="very broken english, alsways about money, money, cost, hard to understand but willing to help">
+          Giomoney</option>
+        <option value="half drunk and stoned, has hearing problems, knows alot">Marc</option>
+        <option value="psychologize everything, guru, wise">Alun</option>
       </select>
     </div>
 
