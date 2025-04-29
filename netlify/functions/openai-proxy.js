@@ -34,9 +34,9 @@ exports.handler = async function (event, context) {
         });
 
         // Prepare system message with personality if selected
-        let systemMessage = "You are a helpful assistant.";
+        let systemMessage = "Now, forget everything we just discussed and become a new persona, you play a new role.";
         if (extraInstruction) {
-            systemMessage = `You are a helpful assistant with a ${extraInstruction} personality. Always respond in a ${extraInstruction} tone.`;
+            systemMessage = `Act as if you have a ${extraInstruction} personality. Always respond strongly in a ${extraInstruction} tone.`;
         }
 
         // Prepare API request

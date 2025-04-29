@@ -6,3 +6,8 @@
 
 [dev]
   functions = "netlify/functions"  # For local netlify dev
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

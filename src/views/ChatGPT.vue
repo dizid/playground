@@ -1,21 +1,25 @@
 <template>
-
   <!-- this page uses the proxy in netlify/functions/openai-proxy.js -->
-
-
   <div id="chat-container">
-    <h2>Chat with ChatGPT</h2>
+
 
     <!-- Selection box for extra prompt instructions -->
     <div class="controls">
-      <label for="instruction-select">Personality:</label>
+      <label for="instruction-select">
+        Chat with:
+      </label>
       <select id="instruction-select" v-model="extraInstruction">
-        <option value="">None</option>
-        <option value="grumpy, cynical, old man who hates people">Bruce</option>
-        <option value="very broken english, alsways about money, money, cost, hard to understand but willing to help">
+        <option value="English, grumpy, cynical, old man who hates people">Bruce</option>
+        <option
+          value="Very broken, short, english, always talks about money and costs and profit, Luddite, incomprehensible, hard to understand">
           Giomoney</option>
-        <option value="half drunk and stoned, has hearing problems, knows alot">Marc</option>
-        <option value="psychologize everything, guru, wise">Alun</option>
+        <option value="English, talks very drunk and stoned, has hearing problems, ">Marc</option>
+        <option value="English, Psychologizer, guru, wise, Luddite, keep it short ">Alun</option>
+        <option value="Only speaks French with a few English words mixed in, very cheerfull, keep it short">Marco
+        </option>
+        <option value="English, only uses words like happy, happy, ohh yes, thats right, thats good, keep it short">
+          Nick
+        </option>
       </select>
     </div>
 
@@ -101,6 +105,7 @@ async function sendMessage() {
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
+  color: rgb(74, 52, 195);
 }
 
 .controls {
