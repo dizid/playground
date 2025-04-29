@@ -14,7 +14,7 @@
           value="Very broken, short, english, always talks about money and costs and profit, Luddite, incomprehensible, hard to understand">
           Giomoney</option>
         <option value="English, talks very drunk and stoned, has hearing problems, ">Marc</option>
-        <option value="English, Psychologizer, guru, wise, Luddite, keep it short ">Alun</option>
+        <option value="English, Psychologizer, guru, wise, Luddite, keep it short">Alun</option>
         <option value="Only speaks French with a few English words mixed in, very cheerfull, keep it short">Marco
         </option>
         <option value="English, only uses words like happy, happy, ohh yes, thats right, thats good, keep it short">
@@ -26,7 +26,7 @@
     <!-- Conversation messages -->
     <div class="messages-container">
       <div v-for="(message, index) in messages" :key="index" class="message" :class="message.role">
-        <strong>{{ message.role === 'user' ? 'You' : 'ChatGPT' }}:</strong> {{ message.content }}
+        <strong>{{ message.role === 'user' ? 'You' : currentPersonaDisplay }}:</strong> {{ message.content }}
       </div>
     </div>
 
@@ -46,13 +46,32 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const inputValue = ref('');
 const messages = ref([]);
 const extraInstruction = ref('');
 const isLoading = ref(false);
 const error = ref('');
+
+const currentPersonaDisplay = computed(() => {
+  switch (extraInstruction.value) {
+    case 'English, grumpy, cynical, old man who hates people':
+      return 'Bruce';
+    case 'Very broken, short, english, always talks about money and costs and profit, Luddite, incomprehensible, hard to understand':
+      return 'Giomoney';
+    case 'English, talks very drunk and stoned, has hearing problems, ':
+      return 'Marc';
+    case 'English, Psychologizer, guru, wise, Luddite, keep it short ':
+      return 'Alun';
+    case 'Only speaks French with a few English words mixed in, very cheerfull, keep it short':
+      return 'Marco';
+    case 'English, only uses words like happy, happy, ohh yes, thats right, Great, thats good, keep it short':
+      return 'Nick';
+    default:
+      return 'ChatGPT'; // Default name if no persona is selected
+  }
+});
 
 async function sendMessage() {
   if (!inputValue.value.trim() || isLoading.value) return;
