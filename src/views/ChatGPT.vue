@@ -13,7 +13,7 @@
         <option
           value="Very broken, short, english, always talks about money and costs and profit, Luddite, incomprehensible, hard to understand">
           Giomoney</option>
-        <option value="English, talks very drunk and stoned, has hearing problems, ">Marc</option>
+        <option value="English, talks very drunk and stoned, has hearing problems">Marc</option>
         <option value="English, Psychologizer, guru, wise, Luddite, keep it short">Alun</option>
         <option value="Only speaks French with a few English words mixed in, very cheerfull, keep it short">Marco
         </option>
@@ -60,7 +60,7 @@ const currentPersonaDisplay = computed(() => {
       return 'Bruce';
     case 'Very broken, short, english, always talks about money and costs and profit, Luddite, incomprehensible, hard to understand':
       return 'Giomoney';
-    case 'English, talks very drunk and stoned, has hearing problems ':
+    case 'English, talks very drunk and stoned, has hearing problems':
       return 'Marc';
     case 'English, Psychologizer, guru, wise, Luddite, keep it short':
       return 'Alun';

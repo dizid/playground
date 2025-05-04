@@ -35,12 +35,16 @@ const router = createRouter({
       component: () => import('../views/Omdb.vue')
     },
     {
-      path: '/grumpy-old-man',
-      name: 'grumpy-old-man',
+      path: '/grumpy-ai',
+      name: 'grumpy-ai',
       component: () => import('../views/ChatGPT.vue')
     },
 
-
+    {
+      path: '/humor',
+      name: 'humor',
+      component: () => import('../views/Humor.vue')
+    },
   ]
 })
 
