@@ -21,12 +21,12 @@
       <h1>Hello, {{ userEmail }}</h1>
       <p>Today's drinks: {{ drinkCount }}</p>
       <div class="counter-controls">
-        <button @click="decrementDrink" :disabled="drinkCount === 0">-</button>
+        <!-- Only increment button is kept; decrement removed as per request -->
         <span>{{ drinkCount }}</span>
         <button @click="incrementDrink">+</button>
       </div>
 
-      <!-- Optional context inputs -->
+      <!-- Optional context inputs (kept, but display of contexts removed) -->
       <div class="context-section">
         <h3>Add Context (Optional)</h3>
         <select v-model="contextAlone">
@@ -44,19 +44,6 @@
           Save Context
         </button>
       </div>
-
-      <!-- Logged contexts display -->
-      <div v-if="contexts.length" class="contexts-list">
-        <h3>Today's Contexts</h3>
-        <ul>
-          <li v-for="(ctx, index) in contexts" :key="index">
-            {{ ctx.alone }} at {{ ctx.location }} (Drink #{{ index + 1 }})
-          </li>
-        </ul>
-      </div>
-
-      <!-- Reset button -->
-      <button @click="resetDaily" class="reset-button">Reset Today's Count</button>
 
       <!-- Motivational box -->
       <div class="motivation-box">
@@ -80,7 +67,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 const userEmail = ref(null);
 const emailInput = ref('');
 const drinkCount = ref(0);
-const contexts = ref([]); // Array to store contexts for each drink
+const contexts = ref([]); // Array to store contexts for each drink (kept for storage, but not displayed)
 const contextAlone = ref('');
 const contextLocation = ref('');
 let notificationInterval = null;
@@ -103,18 +90,6 @@ const incrementDrink = () => {
   }
 };
 
-// Function to decrement drink count
-const decrementDrink = () => {
-  if (drinkCount.value > 0) {
-    drinkCount.value--;
-    // Remove last context if exists
-    if (contexts.value.length > 0) {
-      contexts.value.pop();
-    }
-    saveData();
-  }
-};
-
 // Function to save current context (can be called separately or with increment)
 const saveContext = () => {
   contexts.value.push({
@@ -124,13 +99,6 @@ const saveContext = () => {
   // Reset inputs
   contextAlone.value = '';
   contextLocation.value = '';
-  saveData();
-};
-
-// Function to reset daily count
-const resetDaily = () => {
-  drinkCount.value = 0;
-  contexts.value = [];
   saveData();
 };
 
@@ -155,8 +123,10 @@ const loadData = () => {
       drinkCount.value = parsed.drinkCount;
       contexts.value = parsed.contexts;
     } else {
-      // Auto-reset if not today
-      resetDaily();
+      // Auto-reset if not today (directly set values instead of calling removed reset function)
+      drinkCount.value = 0;
+      contexts.value = [];
+      saveData();
     }
   }
 };
@@ -202,135 +172,195 @@ onUnmounted(() => {
 
 <style scoped>
 /* Container styles */
+
+/* Improved CSS for the Alcohol Help Tracker Page */
+
+/* Container styles */
 .alcohol-help-container {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Login section */
 .login-section {
   text-align: center;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.login-section h1 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.login-section p {
+  margin-bottom: 20px;
+  color: #666;
 }
 
 .email-input {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 12px;
+  margin-bottom: 20px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.email-input:focus {
+  border-color: #4CAF50;
+  outline: none;
 }
 
 .login-button {
-  padding: 10px 20px;
+  padding: 12px 24px;
   background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }
 
 .login-button:disabled {
   background-color: #ccc;
 }
 
+.login-button:hover {
+  background-color: #45a049;
+}
+
 /* Tracker section */
 .tracker-section {
   text-align: center;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tracker-section h1 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.tracker-section p {
+  margin-bottom: 20px;
+  color: #666;
 }
 
 .counter-controls {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-.counter-controls button {
-  padding: 10px 20px;
-  font-size: 24px;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin: 0 10px;
+  margin-bottom: 20px;
 }
 
 .counter-controls span {
-  font-size: 32px;
-  min-width: 50px;
-  text-align: center;
+  font-size: 24px;
+  margin-right: 10px;
+  color: #333;
+}
+
+.counter-controls button {
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
+
+.counter-controls button:hover {
+  background-color: #45a049;
 }
 
 /* Context section */
 .context-section {
-  margin: 20px 0;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.context-section h3 {
+  margin-bottom: 10px;
+  color: #333;
 }
 
 .context-section select {
   width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
+  margin: 10px 0;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.context-section select:focus {
+  border-color: #4CAF50;
+  outline: none;
 }
 
 .context-section button {
   padding: 10px 20px;
-  background-color: #FFC107;
-  color: black;
+  background-color: #4CAF50;
+  color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }
 
 .context-section button:disabled {
   background-color: #ccc;
 }
 
-/* Contexts list */
-.contexts-list {
-  margin: 20px 0;
-  text-align: left;
+.context-section button:hover {
+  background-color: #45a049;
 }
 
-/* Reset button */
-.reset-button {
-  padding: 10px 20px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-/* Motivation box */
+/* Motivational box */
 .motivation-box {
-  margin-top: 30px;
+  text-align: center;
   padding: 20px;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
+  background: #fff;
   border-radius: 8px;
-  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.motivation-box h3 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.motivation-box p {
+  margin-bottom: 20px;
+  color: #666;
 }
 
 .motivation-box ul {
-  list-style-type: disc;
-  padding-left: 20px;
+  list-style-type: none;
+  padding: 0;
 }
 
-/* Responsive design */
-@media (max-width: 480px) {
-  .counter-controls button {
-    padding: 8px 16px;
-    font-size: 20px;
-  }
-
-  .counter-controls span {
-    font-size: 28px;
-  }
+.motivation-box li {
+  background: #e0f7fa;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 6px;
+  color: #00695c;
+  font-size: 14px;
 }
+
 </style>
