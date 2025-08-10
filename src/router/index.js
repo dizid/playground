@@ -39,12 +39,6 @@ const router = createRouter({
       name: 'grumpy-ai',
       component: () => import('../views/ChatGPT.vue')
     },
-
-    {
-      path: '/humor',
-      name: 'humor',
-      component: () => import('../views/Humor.vue')
-    },
   ]
 })
 
