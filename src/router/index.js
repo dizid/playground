@@ -30,9 +30,9 @@ const router = createRouter({
       component: () => import('../views/Advice.vue')
     },
     {
-      path: '/movie',
-      name: 'movie',
-      component: () => import('../views/Omdb.vue')
+      path: '/alcohol-help',
+      name: 'alcohol-help',
+      component: () => import('../views/AlcoholHelp.vue')
     },
     {
       path: '/grumpy-ai',
