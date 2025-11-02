@@ -25,11 +25,6 @@ const router = createRouter({
       component: () => import('../views/Advice.vue')
     },
     {
-      path: '/alcohol-help',
-      name: 'alcohol-help',
-      component: () => import('../views/AlcoholHelp.vue')
-    },
-    {
       path: '/grumpy-ai',
       name: 'grumpy-ai',
       component: () => import('../views/ChatGPT.vue')

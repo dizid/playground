@@ -1,5 +1,9 @@
 <template>
   <div class="image-editor-container">
+    <div v-if="notification.show" class="notification" :class="notification.type">
+      {{ notification.message }}
+    </div>
+
     <div class="editor-header">
       <h1>🎨 Funny Image Editor</h1>
       <p>Make hilarious memes and silly edits</p>
@@ -63,20 +67,6 @@
           </div>
         </div>
 
-        <div v-if="imageLoaded" class="controls-section">
-          <h3>🔍 Canvas Controls</h3>
-          <div class="text-options">
-            <label>
-              Zoom:
-              <input v-model.number="zoomLevel" type="range" min="50" max="200" step="10" class="slider">
-              <span>{{ zoomLevel }}%</span>
-            </label>
-            <label>
-              <input v-model="showGrid" type="checkbox"> Show Grid
-            </label>
-          </div>
-        </div>
-
         <FunnyEffects
           ref="funnyEffects"
           :sticker-size="stickerSize"
@@ -93,6 +83,7 @@
           @download="downloadImage"
           @copy-clipboard="copyToClipboard"
           @generate-share="generateShareLink"
+          @show-notification="showNotification"
         />
       </div>
     </div>
@@ -124,9 +115,25 @@ export default {
     const historyIndex = ref(-1)
     const brushColor = ref('#ff0000')
     const brushSize = ref(3)
-    const zoomLevel = ref(100)
-    const showGrid = ref(false)
     const canvasScale = ref(1)
+    const notification = ref({
+      show: false,
+      type: 'success',
+      message: ''
+    })
+
+    const showNotification = (data) => {
+      notification.value = {
+        show: true,
+        type: data.type || 'success',
+        message: data.message
+      }
+
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        notification.value.show = false
+      }, 3000)
+    }
 
     const saveToHistory = () => {
       if (!canvas.value) return
@@ -137,7 +144,14 @@ export default {
       history.value = history.value.slice(0, historyIndex.value + 1)
 
       history.value.push(imageData)
-      historyIndex.value = history.value.length - 1
+
+      // Limit history to 4 total (initial + 3 undoable steps)
+      if (history.value.length > 4) {
+        history.value.shift()
+        historyIndex.value = 3
+      } else {
+        historyIndex.value = history.value.length - 1
+      }
     }
 
     const undo = () => {
@@ -717,8 +731,7 @@ export default {
       toolStatus,
       brushColor,
       brushSize,
-      zoomLevel,
-      showGrid,
+      notification,
       handleImageUpload,
       resetImage,
       handleCanvasClick,
@@ -730,6 +743,7 @@ export default {
       downloadImage,
       copyToClipboard,
       generateShareLink,
+      showNotification,
       undo
     }
   }
@@ -742,6 +756,53 @@ export default {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: #eee;
   padding: 20px;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 9999;
+  animation: slideDown 0.3s ease-out;
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8c42 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+.notification.info {
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+}
+
+.notification.warning {
+  background: linear-gradient(135deg, #ffd93d 0%, #ffa500 100%);
+  color: #1a1a2e;
+  box-shadow: 0 4px 12px rgba(255, 217, 61, 0.4);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .editor-header {

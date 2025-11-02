@@ -79,7 +79,7 @@
 <script>
 export default {
   name: 'ExportPanel',
-  emits: ['download', 'copy-clipboard', 'generate-share'],
+  emits: ['download', 'copy-clipboard', 'generate-share', 'show-notification'],
   setup(props, { emit }) {
     const downloadJPEG = () => {
       emit('download')
@@ -104,9 +104,15 @@ export default {
       // First, generate the share link
       emit('generate-share')
 
-      // Copy URL to clipboard silently
+      // Copy URL to clipboard and provide feedback
       navigator.clipboard.writeText(shareUrl).then(() => {
-        // Just open the platform, don't show alerts
+        // Show in-app notification that link was copied
+        emit('show-notification', {
+          type: 'success',
+          message: `✅ Link copied! Opening ${platform}...`
+        })
+
+        // Open the platform
         if (platform === 'twitter') {
           window.open(socialUrls.twitter, '_blank')
         } else if (platform === 'instagram') {
@@ -115,7 +121,13 @@ export default {
           window.open('https://www.tiktok.com/', '_blank')
         }
       }).catch(() => {
-        // Silent fail - just open the platform
+        // Show error notification
+        emit('show-notification', {
+          type: 'error',
+          message: '❌ Failed to copy link to clipboard'
+        })
+
+        // Still open the platform
         window.open(socialUrls[platform] || 'https://www.instagram.com/', '_blank')
       })
     }
