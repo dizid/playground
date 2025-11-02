@@ -24,9 +24,6 @@
           @mousemove="draw"
           @mouseup="stopDrawing"
           @mouseleave="stopDrawing"
-          @touchstart="handleTouchStart"
-          @touchmove="handleTouchMove"
-          @touchend="handleTouchEnd"
         ></canvas>
       </div>
 
@@ -100,7 +97,7 @@
 </template>
 
 <script>
-import { ref, nextTick, computed } from 'vue'
+import { ref, nextTick, computed, onMounted } from 'vue'
 import FunnyEffects from '../components/FunnyEffects.vue'
 import StickerLibrary from '../components/StickerLibrary.vue'
 import ExportPanel from '../components/ExportPanel.vue'
@@ -363,64 +360,6 @@ export default {
       }
     }
 
-    // Touch event handlers for mobile
-    const handleTouchStart = (e) => {
-      if (!imageLoaded.value || !canvas.value) return
-
-      // Only prevent default if we're actually going to draw
-      if (currentTool.value === 'draw') {
-        e.preventDefault()
-      }
-
-      const touch = e.touches[0]
-      isDrawing.value = true
-    }
-
-    const handleTouchMove = (e) => {
-      if (!imageLoaded.value || !canvas.value || !isDrawing.value) return
-
-      // Prevent scrolling while drawing
-      if (currentTool.value === 'draw') {
-        e.preventDefault()
-      }
-
-      const touch = e.touches[0]
-      const ctx = canvas.value.getContext('2d')
-      const rect = canvas.value.getBoundingClientRect()
-
-      // Calculate position in CSS pixel space
-      const cssX = touch.clientX - rect.left
-      const cssY = touch.clientY - rect.top
-
-      // Scale to internal canvas resolution
-      const scaleX = canvas.value.width / rect.width
-      const scaleY = canvas.value.height / rect.height
-
-      const x = cssX * scaleX
-      const y = cssY * scaleY
-
-      // Only draw if within canvas bounds
-      if (x >= 0 && x <= canvas.value.width && y >= 0 && y <= canvas.value.height) {
-        ctx.fillStyle = brushColor.value
-        const radius = brushSize.value / 2
-        ctx.beginPath()
-        ctx.arc(x, y, radius, 0, Math.PI * 2)
-        ctx.fill()
-      }
-    }
-
-    const handleTouchEnd = (e) => {
-      if (!imageLoaded.value || !canvas.value) return
-
-      if (currentTool.value === 'draw') {
-        e.preventDefault()
-      }
-
-      if (isDrawing.value) {
-        isDrawing.value = false
-        saveToHistory()
-      }
-    }
 
     const applyEffect = (effectInput) => {
       if (!imageLoaded.value || !canvas.value) return
@@ -798,6 +737,65 @@ export default {
 
     setupKeyboardShortcuts()
 
+    // Call setup function when canvas is mounted
+    onMounted(() => {
+      setupTouchListeners()
+    })
+
+    // Setup touch listeners with {passive: false} to allow preventDefault()
+    const setupTouchListeners = () => {
+      if (!canvas.value) return
+
+      const canvasElement = canvas.value
+
+      // Remove passive default by explicitly setting passive: false
+      canvasElement.addEventListener('touchstart', (e) => {
+        if (currentTool.value === 'draw') {
+          e.preventDefault()
+        }
+        isDrawing.value = true
+      }, { passive: false })
+
+      canvasElement.addEventListener('touchmove', (e) => {
+        if (!isDrawing.value || currentTool.value !== 'draw') return
+        e.preventDefault()
+
+        const touch = e.touches[0]
+        const ctx = canvas.value.getContext('2d')
+        const rect = canvas.value.getBoundingClientRect()
+
+        // Calculate position in CSS pixel space
+        const cssX = touch.clientX - rect.left
+        const cssY = touch.clientY - rect.top
+
+        // Scale to internal canvas resolution
+        const scaleX = canvas.value.width / rect.width
+        const scaleY = canvas.value.height / rect.height
+
+        const x = cssX * scaleX
+        const y = cssY * scaleY
+
+        // Only draw if within canvas bounds
+        if (x >= 0 && x <= canvas.value.width && y >= 0 && y <= canvas.value.height) {
+          ctx.fillStyle = brushColor.value
+          const radius = brushSize.value / 2
+          ctx.beginPath()
+          ctx.arc(x, y, radius, 0, Math.PI * 2)
+          ctx.fill()
+        }
+      }, { passive: false })
+
+      canvasElement.addEventListener('touchend', (e) => {
+        if (currentTool.value === 'draw') {
+          e.preventDefault()
+        }
+        if (isDrawing.value) {
+          isDrawing.value = false
+          saveToHistory()
+        }
+      }, { passive: false })
+    }
+
     const handleRandomEffect = () => {
       // Call the randomEffect method from FunnyEffects component
       if (funnyEffects.value) {
@@ -822,9 +820,6 @@ export default {
       handleCanvasClick,
       draw,
       stopDrawing,
-      handleTouchStart,
-      handleTouchMove,
-      handleTouchEnd,
       applyEffect,
       addTextToImage,
       addSticker,
