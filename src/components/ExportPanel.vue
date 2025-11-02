@@ -109,26 +109,30 @@ export default {
         // Show in-app notification that link was copied
         emit('show-notification', {
           type: 'success',
-          message: `✅ Link copied! Opening ${platform}...`
+          message: `✅ Link copied to clipboard! Opening ${platform}...`
         })
 
-        // Open the platform
-        if (platform === 'twitter') {
-          window.open(socialUrls.twitter, '_blank')
-        } else if (platform === 'instagram') {
-          window.open('https://www.instagram.com/', '_blank')
-        } else if (platform === 'tiktok') {
-          window.open('https://www.tiktok.com/', '_blank')
-        }
+        // Delay opening the platform slightly to ensure notification is visible
+        setTimeout(() => {
+          if (platform === 'twitter') {
+            window.open(socialUrls.twitter, '_blank')
+          } else if (platform === 'instagram') {
+            window.open('https://www.instagram.com/', '_blank')
+          } else if (platform === 'tiktok') {
+            window.open('https://www.tiktok.com/', '_blank')
+          }
+        }, 500)
       }).catch(() => {
         // Show error notification
         emit('show-notification', {
           type: 'error',
-          message: '❌ Failed to copy link to clipboard'
+          message: '❌ Failed to copy link to clipboard. Opening platform anyway...'
         })
 
-        // Still open the platform
-        window.open(socialUrls[platform] || 'https://www.instagram.com/', '_blank')
+        // Delay opening the platform slightly
+        setTimeout(() => {
+          window.open(socialUrls[platform] || 'https://www.instagram.com/', '_blank')
+        }, 500)
       })
     }
 

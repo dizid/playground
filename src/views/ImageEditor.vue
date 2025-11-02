@@ -129,10 +129,10 @@ export default {
         message: data.message
       }
 
-      // Auto-hide after 3 seconds
+      // Auto-hide after 4 seconds
       setTimeout(() => {
         notification.value.show = false
-      }, 3000)
+      }, 4000)
     }
 
     const saveToHistory = () => {
@@ -296,7 +296,11 @@ export default {
     }
 
     const stopDrawing = () => {
-      isDrawing.value = false
+      if (isDrawing.value) {
+        isDrawing.value = false
+        // Save drawing to history when user stops
+        saveToHistory()
+      }
     }
 
     const applyEffect = (effectInput) => {
@@ -308,7 +312,8 @@ export default {
       const effectValue = typeof effectInput === 'object' ? effectInput.value : null
 
       // For slider effects, always work from original image to avoid cumulative effects
-      const isSliderEffect = ['brightness', 'contrast', 'saturation', 'preset'].includes(effectType)
+      // NOTE: preset is NOT included here because it should apply on top of existing edits
+      const isSliderEffect = ['brightness', 'contrast', 'saturation'].includes(effectType)
 
       let imageData
       if (isSliderEffect) {
@@ -319,7 +324,7 @@ export default {
           originalImageData.value.height
         )
       } else {
-        // For non-slider effects, get current canvas state
+        // For non-slider effects and presets, get current canvas state
         imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
       }
 
@@ -366,11 +371,6 @@ export default {
           applyFlipVertical()
           saveToHistory()
           return
-        case 'rotation':
-          ctx.putImageData(imageData, 0, 0)
-          applyRotation(effectValue)
-          saveToHistory()
-          return
         case 'preset':
           // Apply preset - brightness, contrast, saturation in order
           applyBrightnessEffect(data, effectValue.brightness)
@@ -379,11 +379,12 @@ export default {
           break
       }
 
-      if (effectType !== 'flip-h' && effectType !== 'flip-v' && effectType !== 'rotation') {
+      if (effectType !== 'flip-h' && effectType !== 'flip-v') {
         ctx.putImageData(imageData, 0, 0)
       }
 
-      // Only save non-slider effects to history to avoid cluttering
+      // Save non-slider effects to history (includes presets now)
+      // Slider effects (brightness, contrast, saturation) are not saved to avoid cluttering
       if (!isSliderEffect) {
         saveToHistory()
       }
@@ -582,44 +583,6 @@ export default {
       }
 
       ctx.putImageData(imageData, 0, 0)
-    }
-
-    const applyRotation = (angle) => {
-      if (!canvas.value || angle === 0) return
-      const ctx = canvas.value.getContext('2d')
-
-      // For 90, 180, 270 degree rotations, we need to handle canvas resizing for 90/270
-      const radians = (angle * Math.PI) / 180
-      const cos = Math.cos(radians)
-      const sin = Math.sin(radians)
-
-      const imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
-      const width = canvas.value.width
-      const height = canvas.value.height
-
-      if (angle === 90 || angle === 270) {
-        // Swap width and height for 90/270 rotations
-        canvas.value.width = height
-        canvas.value.height = width
-      }
-
-      // Clear and redraw
-      ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
-      ctx.save()
-
-      if (angle === 90) {
-        ctx.translate(height, 0)
-        ctx.rotate((90 * Math.PI) / 180)
-      } else if (angle === 180) {
-        ctx.translate(width, height)
-        ctx.rotate(Math.PI)
-      } else if (angle === 270) {
-        ctx.translate(0, width)
-        ctx.rotate((270 * Math.PI) / 180)
-      }
-
-      ctx.putImageData(imageData, 0, 0)
-      ctx.restore()
     }
 
     const addTextToImage = (textData) => {

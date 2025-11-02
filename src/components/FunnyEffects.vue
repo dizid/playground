@@ -71,20 +71,13 @@
         <span class="toggle-icon">{{ openSections.transforms ? '▼' : '▶' }}</span>
         <h4>Transforms</h4>
       </button>
-      <div v-if="openSections.transforms" class="text-options">
-        <div class="button-group">
-          <button class="effect-btn" @click="$emit('apply-effect', 'flip-h')" title="Flip horizontally">
-            ↔️ Flip H
-          </button>
-          <button class="effect-btn" @click="$emit('apply-effect', 'flip-v')" title="Flip vertically">
-            ↕️ Flip V
-          </button>
-        </div>
-        <label>
-          Rotate:
-          <input v-model.number="rotation" type="range" min="0" max="360" step="90" class="slider" @change="updateSliderEffect('rotation')">
-          <span>{{ rotation }}°</span>
-        </label>
+      <div v-if="openSections.transforms" class="button-group">
+        <button class="effect-btn" @click="$emit('apply-effect', 'flip-h')" title="Flip horizontally">
+          ↔️ Flip H
+        </button>
+        <button class="effect-btn" @click="$emit('apply-effect', 'flip-v')" title="Flip vertically">
+          ↕️ Flip V
+        </button>
       </div>
     </div>
 
@@ -209,7 +202,6 @@ export default {
     const brightness = ref(0)
     const contrast = ref(0)
     const saturation = ref(0)
-    const rotation = ref(0)
 
     const openSections = ref({
       distortion: true,
@@ -250,9 +242,6 @@ export default {
           break
         case 'saturation':
           emit('apply-effect', { type: 'saturation', value: saturation.value })
-          break
-        case 'rotation':
-          emit('apply-effect', { type: 'rotation', value: rotation.value })
           break
       }
     }
@@ -307,7 +296,6 @@ export default {
       brightness,
       contrast,
       saturation,
-      rotation,
       openSections,
       toggleSection,
       addTextToImage,
