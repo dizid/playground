@@ -335,35 +335,41 @@ export default {
 
     // Touch event handlers for mobile
     const handleTouchStart = (e) => {
-      e.preventDefault()
       if (!imageLoaded.value || !canvas.value) return
+      e.preventDefault()
 
       const touch = e.touches[0]
-      const mouseEvent = new MouseEvent('mousedown', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      })
-      canvas.value.dispatchEvent(mouseEvent)
+      // Directly call the drawing start function
+      isDrawing.value = true
     }
 
     const handleTouchMove = (e) => {
+      if (!imageLoaded.value || !canvas.value || !isDrawing.value) return
       e.preventDefault()
-      if (!imageLoaded.value || !canvas.value) return
 
       const touch = e.touches[0]
-      const mouseEvent = new MouseEvent('mousemove', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      })
-      canvas.value.dispatchEvent(mouseEvent)
+      const ctx = canvas.value.getContext('2d')
+      const rect = canvas.value.getBoundingClientRect()
+
+      // Calculate position relative to canvas
+      const x = (touch.clientX - rect.left)
+      const y = (touch.clientY - rect.top)
+
+      ctx.fillStyle = brushColor.value
+      const radius = brushSize.value / 2
+      ctx.beginPath()
+      ctx.arc(x, y, radius, 0, Math.PI * 2)
+      ctx.fill()
     }
 
     const handleTouchEnd = (e) => {
-      e.preventDefault()
       if (!imageLoaded.value || !canvas.value) return
+      e.preventDefault()
 
-      const mouseEvent = new MouseEvent('mouseup', {})
-      canvas.value.dispatchEvent(mouseEvent)
+      if (isDrawing.value) {
+        isDrawing.value = false
+        saveToHistory()
+      }
     }
 
     const applyEffect = (effectInput) => {
