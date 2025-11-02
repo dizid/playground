@@ -119,7 +119,7 @@ export default {
     const currentTool = ref('draw')
     const pendingSticker = ref(null)
     const stickerSize = ref(80)
-    const defaultTextSize = ref(20)
+    const defaultTextSize = ref(32)
     const history = ref([])
     const historyIndex = ref(-1)
     const brushColor = ref('#ff0000')
@@ -201,11 +201,9 @@ export default {
               // Constrain between 40px and 200px for practical reasons
               stickerSize.value = Math.max(40, Math.min(200, calculatedSize))
 
-              // Calculate appropriate default text size based on image dimensions
-              // Use 6-8% of the average image dimension
-              const calculatedTextSize = Math.round(avgDimension * 0.07)
-              // Constrain between 10px and 100px for practical reasons
-              defaultTextSize.value = Math.max(10, Math.min(100, calculatedTextSize))
+              // Set a reasonable default text size that works on all devices
+              // Text size doesn't need to scale with image size - use fixed reasonable default
+              defaultTextSize.value = 32
 
               // Save initial state to history
               history.value = []

@@ -184,7 +184,7 @@ export default {
     },
     defaultTextSize: {
       type: Number,
-      default: 20
+      default: 32
     }
   },
   emits: ['apply-effect', 'add-text', 'update:stickerSize'],
