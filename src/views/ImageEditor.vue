@@ -117,7 +117,7 @@ export default {
     const isDrawing = ref(false)
     const currentTool = ref('draw')
     const pendingSticker = ref(null)
-    const stickerSize = ref(200)
+    const stickerSize = ref(80)
     const history = ref([])
     const historyIndex = ref(-1)
     const brushColor = ref('#ff0000')
@@ -191,6 +191,13 @@ export default {
               // Store original image data using canvas dimensions
               originalImageData.value = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
               imageLoaded.value = true
+
+              // Calculate appropriate sticker size based on image dimensions
+              // Use 12-15% of the average image dimension for good scaling on all sizes
+              const avgDimension = (img.width + img.height) / 2
+              const calculatedSize = Math.round(avgDimension * 0.13)
+              // Constrain between 40px and 200px for practical reasons
+              stickerSize.value = Math.max(40, Math.min(200, calculatedSize))
 
               // Save initial state to history
               history.value = []

@@ -180,7 +180,7 @@ export default {
   props: {
     stickerSize: {
       type: Number,
-      default: 200
+      default: 80
     }
   },
   emits: ['apply-effect', 'add-text', 'update:stickerSize'],
