@@ -79,6 +79,12 @@
           @add-sticker="addSticker"
         />
 
+        <div class="random-button-section">
+          <button class="random-btn" @click="handleRandomEffect" title="Apply random effect!">
+            🎲 Random!
+          </button>
+        </div>
+
         <ExportPanel
           @download="downloadImage"
           @copy-clipboard="copyToClipboard"
@@ -690,6 +696,13 @@ export default {
 
     setupKeyboardShortcuts()
 
+    const handleRandomEffect = () => {
+      // Call the randomEffect method from FunnyEffects component
+      if (funnyEffects.value) {
+        funnyEffects.value.randomEffect()
+      }
+    }
+
     return {
       canvas,
       imageLoaded,
@@ -713,7 +726,8 @@ export default {
       copyToClipboard,
       generateShareLink,
       showNotification,
-      undo
+      undo,
+      handleRandomEffect
     }
   }
 }
@@ -947,6 +961,38 @@ export default {
 
 .brush-preview svg {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.random-button-section {
+  background: #16213e;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid #0f3460;
+  display: flex;
+  justify-content: center;
+}
+
+.random-btn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #ffd93d 0%, #ff6b6b 100%);
+  color: #1a1a2e;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 900;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 200px;
+}
+
+.random-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(255, 217, 61, 0.5);
+}
+
+.random-btn:active {
+  transform: scale(0.95);
 }
 
 .file-input {

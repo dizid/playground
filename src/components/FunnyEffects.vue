@@ -169,13 +169,6 @@
       </div>
     </div>
 
-    <div class="effect-group">
-      <div class="button-group">
-        <button class="effect-btn fun" @click="randomEffect" title="Apply random effect!">
-          🎲 Random!
-        </button>
-      </div>
-    </div>
   </div>
 </template>
 
