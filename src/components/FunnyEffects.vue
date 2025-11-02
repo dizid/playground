@@ -134,7 +134,7 @@
           </label>
           <label>
             Size:
-            <input v-model.number="fontSize" type="range" min="10" max="200" class="slider">
+            <input v-model.number="fontSize" type="range" min="8" max="150" class="slider">
             <span>{{ fontSize }}px</span>
           </label>
           <label>
@@ -181,12 +181,16 @@ export default {
     stickerSize: {
       type: Number,
       default: 80
+    },
+    defaultTextSize: {
+      type: Number,
+      default: 20
     }
   },
   emits: ['apply-effect', 'add-text', 'update:stickerSize'],
   setup(props, { emit }) {
     const textContent = ref('')
-    const fontSize = ref(40)
+    const fontSize = ref(props.defaultTextSize)
     const textColor = ref('#ff0000')
     const textFont = ref('Arial, sans-serif')
     const textBold = ref(false)

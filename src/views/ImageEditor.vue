@@ -70,6 +70,7 @@
         <FunnyEffects
           ref="funnyEffects"
           :sticker-size="stickerSize"
+          :default-text-size="defaultTextSize"
           @apply-effect="applyEffect"
           @add-text="addTextToImage"
           @update:sticker-size="stickerSize = $event"
@@ -118,6 +119,7 @@ export default {
     const currentTool = ref('draw')
     const pendingSticker = ref(null)
     const stickerSize = ref(80)
+    const defaultTextSize = ref(20)
     const history = ref([])
     const historyIndex = ref(-1)
     const brushColor = ref('#ff0000')
@@ -198,6 +200,12 @@ export default {
               const calculatedSize = Math.round(avgDimension * 0.13)
               // Constrain between 40px and 200px for practical reasons
               stickerSize.value = Math.max(40, Math.min(200, calculatedSize))
+
+              // Calculate appropriate default text size based on image dimensions
+              // Use 6-8% of the average image dimension
+              const calculatedTextSize = Math.round(avgDimension * 0.07)
+              // Constrain between 10px and 100px for practical reasons
+              defaultTextSize.value = Math.max(10, Math.min(100, calculatedTextSize))
 
               // Save initial state to history
               history.value = []
@@ -868,6 +876,7 @@ export default {
       pendingSticker,
       pendingText,
       stickerSize,
+      defaultTextSize,
       toolStatus,
       brushColor,
       brushSize,
