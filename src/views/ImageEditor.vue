@@ -248,9 +248,9 @@ export default {
       const rect = canvas.value.getBoundingClientRect()
       const dpr = window.devicePixelRatio || 1
 
-      // Calculate position relative to canvas (CSS coordinates are already correct)
-      const x = (e.clientX - rect.left)
-      const y = (e.clientY - rect.top)
+      // Calculate position relative to canvas with DPI scaling
+      const x = (e.clientX - rect.left) * dpr
+      const y = (e.clientY - rect.top) * dpr
 
       const fontWeight = pendingText.value.bold ? 'bold' : 'normal'
       let fontFamily = pendingText.value.font || 'Arial, sans-serif'
@@ -294,9 +294,9 @@ export default {
       const rect = canvas.value.getBoundingClientRect()
       const dpr = window.devicePixelRatio || 1
 
-      // Calculate position relative to canvas (CSS coordinates are already correct)
-      const x = (e.clientX - rect.left)
-      const y = (e.clientY - rect.top)
+      // Calculate position relative to canvas with DPI scaling
+      const x = (e.clientX - rect.left) * dpr
+      const y = (e.clientY - rect.top) * dpr
 
       // Use stickerSize ref for dynamic sizing, scaled by DPI
       const scaledStickerSize = stickerSize.value * dpr
@@ -321,8 +321,8 @@ export default {
 
       // Calculate position relative to canvas with proper scaling
       // Account for both CSS display size and DPI scaling
-      const x = (e.clientX - rect.left)
-      const y = (e.clientY - rect.top)
+      const x = (e.clientX - rect.left) * dpr
+      const y = (e.clientY - rect.top) * dpr
 
       ctx.fillStyle = brushColor.value
       const radius = brushSize.value / 2
@@ -356,10 +356,11 @@ export default {
       const touch = e.touches[0]
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
+      const dpr = window.devicePixelRatio || 1
 
-      // Calculate position relative to canvas
-      const x = (touch.clientX - rect.left)
-      const y = (touch.clientY - rect.top)
+      // Calculate position relative to canvas with DPI scaling
+      const x = (touch.clientX - rect.left) * dpr
+      const y = (touch.clientY - rect.top) * dpr
 
       ctx.fillStyle = brushColor.value
       const radius = brushSize.value / 2
