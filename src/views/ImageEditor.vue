@@ -194,7 +194,8 @@ export default {
               ctx.scale(dpr, dpr)
 
               ctx.drawImage(img, 0, 0)
-              originalImageData.value = ctx.getImageData(0, 0, img.width, img.height)
+              // Store original image data using correct scaled dimensions
+              originalImageData.value = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
               imageLoaded.value = true
 
               // Save initial state to history
@@ -752,8 +753,11 @@ export default {
       canvasElement.addEventListener('touchstart', (e) => {
         if (currentTool.value === 'draw') {
           e.preventDefault()
+          isDrawing.value = true
+        } else if (currentTool.value === 'text' || currentTool.value === 'sticker') {
+          e.preventDefault()
+          // Don't set isDrawing for text/sticker tools
         }
-        isDrawing.value = true
       }, { passive: false })
 
       canvasElement.addEventListener('touchmove', (e) => {
@@ -788,10 +792,33 @@ export default {
       canvasElement.addEventListener('touchend', (e) => {
         if (currentTool.value === 'draw') {
           e.preventDefault()
-        }
-        if (isDrawing.value) {
-          isDrawing.value = false
-          saveToHistory()
+          if (isDrawing.value) {
+            isDrawing.value = false
+            saveToHistory()
+          }
+        } else if (currentTool.value === 'text' || currentTool.value === 'sticker') {
+          e.preventDefault()
+          // For text/sticker placement, we need to use the last touch position
+          // Get the touch that just ended
+          const touch = e.changedTouches[0]
+          if (touch) {
+            // Create a synthetic event object with clientX/clientY for text/sticker placement
+            const fakeEvent = {
+              clientX: touch.clientX,
+              clientY: touch.clientY
+            }
+
+            if (currentTool.value === 'text') {
+              addTextAtPosition(fakeEvent)
+              currentTool.value = 'draw'
+            } else if (currentTool.value === 'sticker') {
+              if (pendingSticker.value) {
+                addStickerAtPosition(fakeEvent)
+                pendingSticker.value = null
+              }
+              currentTool.value = 'draw'
+            }
+          }
         }
       }, { passive: false })
     }
