@@ -231,19 +231,29 @@ export default {
       const y = (e.clientY - rect.top) * scaleY
 
       const fontWeight = pendingText.value.bold ? 'bold' : 'normal'
-      const fontFamily = pendingText.value.font || 'Arial, sans-serif'
+      let fontFamily = pendingText.value.font || 'Arial, sans-serif'
+
+      // Normalize font names - ensure font families with spaces are properly quoted
+      // Split by comma to get primary font and fallbacks
+      const fontParts = fontFamily.split(',').map(f => {
+        const trimmed = f.trim()
+        // If the font name has spaces and isn't already quoted, add quotes
+        if (trimmed.includes(' ') && !trimmed.startsWith("'") && !trimmed.startsWith('"')) {
+          return `'${trimmed}'`
+        }
+        return trimmed
+      })
+      fontFamily = fontParts.join(', ')
+
       ctx.font = `${fontWeight} ${pendingText.value.fontSize}px ${fontFamily}`
       ctx.fillStyle = pendingText.value.color
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
 
+      // Only draw outline if explicitly enabled
       if (pendingText.value.outline) {
         ctx.strokeStyle = pendingText.value.outlineColor
         ctx.lineWidth = 4
-        ctx.strokeText(pendingText.value.text, x, y)
-      } else {
-        ctx.strokeStyle = 'black'
-        ctx.lineWidth = 3
         ctx.strokeText(pendingText.value.text, x, y)
       }
 
