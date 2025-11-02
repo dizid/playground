@@ -31,26 +31,26 @@
     </div>
 
     <div class="export-group">
-      <h4>Social Media</h4>
+      <h4>Share to Social</h4>
       <div class="social-buttons">
         <button
           class="social-btn instagram"
-          @click="downloadForSocial('instagram')"
-          title="1080x1080 Square"
+          @click="shareToSocial('instagram')"
+          title="Share on Instagram"
         >
-          📱 Insta (Square)
+          📱 Instagram
         </button>
         <button
           class="social-btn twitter"
-          @click="downloadForSocial('twitter')"
-          title="1024x512 Wide"
+          @click="shareToSocial('twitter')"
+          title="Share on Twitter/X"
         >
           𝕏 Twitter
         </button>
         <button
           class="social-btn tiktok"
-          @click="downloadForSocial('tiktok')"
-          title="1080x1920 Vertical"
+          @click="shareToSocial('tiktok')"
+          title="Share on TikTok"
         >
           🎵 TikTok
         </button>
@@ -85,13 +85,57 @@ export default {
       emit('download')
     }
 
-    const downloadForSocial = (platform) => {
-      alert(`📱 Opening ${platform} dimensions...\n\nYour image is already optimized!\nClick "PNG" or "JPEG" to download for ${platform}`)
+    const shareToSocial = (platform) => {
+      // Generate share link and open social media
+      const shareId = `share-${Date.now()}`
+
+      // Get canvas data from parent (will be handled by emit)
+      emit('generate-share')
+
+      // Create share URL
+      const baseUrl = window.location.hostname === 'localhost'
+        ? 'https://playground.dizid.com'
+        : window.location.origin
+
+      const shareUrl = `${baseUrl}/image-editor?share=${shareId}`
+
+      // Social media share URLs
+      const socialUrls = {
+        instagram: `https://www.instagram.com/`,
+        twitter: `https://twitter.com/intent/tweet?text=Check%20out%20my%20funny%20meme!&url=${encodeURIComponent(shareUrl)}`,
+        tiktok: `https://www.tiktok.com/`
+      }
+
+      // Copy URL to clipboard
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert(`✅ Link copied! Opening ${platform}...\n\n${shareUrl}`)
+
+        // Open social media in new window
+        if (platform === 'twitter') {
+          window.open(socialUrls.twitter, '_blank')
+        } else if (platform === 'instagram') {
+          window.open('https://www.instagram.com/', '_blank')
+          alert(`💡 Paste the image link in your Instagram bio or use "Share to Instagram" from your phone!`)
+        } else if (platform === 'tiktok') {
+          window.open('https://www.tiktok.com/', '_blank')
+          alert(`💡 Download the image and upload it to TikTok!`)
+        }
+      }).catch(() => {
+        // Fallback if clipboard fails
+        if (platform === 'twitter') {
+          window.open(socialUrls.twitter, '_blank')
+        } else if (platform === 'instagram') {
+          window.open('https://www.instagram.com/', '_blank')
+        } else if (platform === 'tiktok') {
+          window.open('https://www.tiktok.com/', '_blank')
+        }
+        alert(`Share URL:\n${shareUrl}`)
+      })
     }
 
     return {
       downloadJPEG,
-      downloadForSocial
+      shareToSocial
     }
   }
 }

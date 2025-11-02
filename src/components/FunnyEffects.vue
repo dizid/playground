@@ -50,6 +50,17 @@
     </div>
 
     <div class="effect-group">
+      <h4>Sticker Size</h4>
+      <div class="text-options">
+        <label>
+          Size:
+          <input :value="stickerSize" type="range" min="40" max="300" class="slider" @change="$emit('update:stickerSize', +$event.target.value)">
+          <span>{{ stickerSize }}px</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="effect-group">
       <h4>Text Tools</h4>
       <div class="text-control">
         <input
@@ -69,7 +80,7 @@
       <div class="text-options">
         <label>
           Font Size:
-          <input v-model.number="fontSize" type="range" min="10" max="100" class="slider">
+          <input v-model.number="fontSize" type="range" min="10" max="200" class="slider">
           <span>{{ fontSize }}px</span>
         </label>
         <label>
@@ -99,7 +110,13 @@ import { ref } from 'vue'
 
 export default {
   name: 'FunnyEffects',
-  emits: ['apply-effect', 'add-text'],
+  props: {
+    stickerSize: {
+      type: Number,
+      default: 120
+    }
+  },
+  emits: ['apply-effect', 'add-text', 'update:stickerSize'],
   setup(props, { emit }) {
     const textContent = ref('')
     const fontSize = ref(40)

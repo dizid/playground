@@ -11,7 +11,7 @@
           <p>📸 Upload an image to start editing!</p>
         </div>
         <div v-if="imageLoaded" class="tool-indicator">
-          Current: {{ currentTool }}
+          {{ toolStatus }}
         </div>
         <canvas
           ref="canvas"
@@ -32,15 +32,22 @@
             @change="handleImageUpload"
             class="file-input"
           >
-          <button v-if="imageLoaded" class="reset-btn" @click="resetImage">
-            🔄 Reset
-          </button>
+          <div v-if="imageLoaded" class="button-row">
+            <button class="reset-btn" @click="resetImage">
+              🔄 Reset
+            </button>
+            <button class="reset-btn" @click="undo" title="Undo last action">
+              ↶ Undo
+            </button>
+          </div>
         </div>
 
         <FunnyEffects
           ref="funnyEffects"
+          :sticker-size="stickerSize"
           @apply-effect="applyEffect"
           @add-text="addTextToImage"
+          @update:sticker-size="stickerSize = $event"
         />
 
         <StickerLibrary
@@ -58,7 +65,7 @@
 </template>
 
 <script>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import FunnyEffects from '../components/FunnyEffects.vue'
 import StickerLibrary from '../components/StickerLibrary.vue'
 import ExportPanel from '../components/ExportPanel.vue'
@@ -77,6 +84,29 @@ export default {
     const isDrawing = ref(false)
     const currentTool = ref('draw')
     const pendingSticker = ref(null)
+    const stickerSize = ref(120)
+    const history = ref([])
+    const historyIndex = ref(-1)
+
+    const saveToHistory = () => {
+      if (!canvas.value) return
+      const ctx = canvas.value.getContext('2d')
+      const imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
+
+      // Remove any future history if we're not at the end
+      history.value = history.value.slice(0, historyIndex.value + 1)
+
+      history.value.push(imageData)
+      historyIndex.value = history.value.length - 1
+    }
+
+    const undo = () => {
+      if (historyIndex.value > 0) {
+        historyIndex.value--
+        const ctx = canvas.value.getContext('2d')
+        ctx.putImageData(history.value[historyIndex.value], 0, 0)
+      }
+    }
 
     const handleImageUpload = (event) => {
       const file = event.target.files?.[0]
@@ -92,6 +122,11 @@ export default {
               ctx.drawImage(img, 0, 0)
               originalImageData.value = ctx.getImageData(0, 0, img.width, img.height)
               imageLoaded.value = true
+
+              // Save initial state to history
+              history.value = []
+              historyIndex.value = -1
+              saveToHistory()
             })
           }
           img.src = e.target.result
@@ -120,9 +155,39 @@ export default {
         addStickerAtPosition(e)
         pendingSticker.value = null
         currentTool.value = 'draw'
+      } else if (currentTool.value === 'text') {
+        addTextAtPosition(e)
+        currentTool.value = 'draw'
       } else if (currentTool.value === 'draw') {
         isDrawing.value = true
       }
+    }
+
+    const pendingText = ref(null)
+
+    const addTextAtPosition = (e) => {
+      if (!imageLoaded.value || !canvas.value || !pendingText.value) return
+      const ctx = canvas.value.getContext('2d')
+      const rect = canvas.value.getBoundingClientRect()
+
+      // Calculate position relative to canvas with proper scaling
+      const scaleX = canvas.value.width / rect.width
+      const scaleY = canvas.value.height / rect.height
+      const x = (e.clientX - rect.left) * scaleX
+      const y = (e.clientY - rect.top) * scaleY
+
+      ctx.font = `bold ${pendingText.value.fontSize}px Arial`
+      ctx.fillStyle = pendingText.value.color
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.strokeStyle = 'black'
+      ctx.lineWidth = 3
+
+      ctx.strokeText(pendingText.value.text, x, y)
+      ctx.fillText(pendingText.value.text, x, y)
+
+      pendingText.value = null
+      saveToHistory()
     }
 
     const addStickerAtPosition = (e) => {
@@ -136,12 +201,13 @@ export default {
       const x = (e.clientX - rect.left) * scaleX
       const y = (e.clientY - rect.top) * scaleY
 
-      ctx.font = 'bold 80px Arial'
+      // Use stickerSize ref for dynamic sizing
+      ctx.font = `bold ${stickerSize.value}px Arial`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillText(pendingSticker.value, x, y)
 
-      originalImageData.value = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
+      saveToHistory()
     }
 
     const startDrawing = (e) => {
@@ -192,7 +258,7 @@ export default {
           break
       }
       ctx.putImageData(imageData, 0, 0)
-      originalImageData.value = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
+      saveToHistory()
     }
 
     const applyBigEyesEffect = (data) => {
@@ -239,23 +305,10 @@ export default {
     }
 
     const addTextToImage = (textData) => {
-      if (!imageLoaded.value || !canvas.value) return
-      const ctx = canvas.value.getContext('2d')
-
-      ctx.font = `bold ${textData.fontSize}px Arial`
-      ctx.fillStyle = textData.color
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      ctx.strokeStyle = 'black'
-      ctx.lineWidth = 3
-
-      const x = canvas.value.width / 2
-      const y = canvas.value.height / 2
-
-      ctx.strokeText(textData.text, x, y)
-      ctx.fillText(textData.text, x, y)
-
-      originalImageData.value = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
+      if (!imageLoaded.value) return
+      // Set pending text and switch to text tool
+      pendingText.value = textData
+      currentTool.value = 'text'
     }
 
     const addSticker = (stickerEmoji) => {
@@ -313,11 +366,25 @@ export default {
       })
     }
 
+    const toolStatus = computed(() => {
+      if (currentTool.value === 'sticker') {
+        return '👆 Click canvas to place sticker'
+      } else if (currentTool.value === 'text') {
+        return '👆 Click canvas to place text'
+      } else if (currentTool.value === 'draw') {
+        return '✏️ Draw'
+      }
+      return 'Ready'
+    })
+
     return {
       canvas,
       imageLoaded,
       currentTool,
       pendingSticker,
+      pendingText,
+      stickerSize,
+      toolStatus,
       handleImageUpload,
       resetImage,
       handleCanvasClick,
@@ -328,7 +395,8 @@ export default {
       addSticker,
       downloadImage,
       copyToClipboard,
-      generateShareLink
+      generateShareLink,
+      undo
     }
   }
 }
@@ -410,9 +478,14 @@ export default {
   background: white;
 }
 
-.reset-btn {
-  width: 100%;
+.button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
   margin-top: 8px;
+}
+
+.reset-btn {
   padding: 8px;
   background: linear-gradient(135deg, #ff6b6b 0%, #ff8c42 100%);
   color: white;
