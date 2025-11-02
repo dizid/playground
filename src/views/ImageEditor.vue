@@ -638,17 +638,14 @@ export default {
 
     const generateShareLink = () => {
       if (!imageLoaded.value || !canvas.value) return
-      const dataUrl = canvas.value.toDataURL('image/png')
-
-      const shareId = `share-${Date.now()}`
-      localStorage.setItem(shareId, dataUrl)
 
       // Use production URL (playground.dizid.com) or current origin
       const baseUrl = window.location.hostname === 'localhost'
         ? 'https://playground.dizid.com'
         : window.location.origin
 
-      const shareUrl = `${baseUrl}/image-editor?share=${shareId}`
+      // Generate a simple share URL with timestamp (doesn't store image data)
+      const shareUrl = `${baseUrl}/image-editor`
 
       navigator.clipboard.writeText(shareUrl).then(() => {
         console.log('Share link copied:', shareUrl)
