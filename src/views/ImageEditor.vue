@@ -779,8 +779,9 @@ export default {
         const x = cssX * scaleX
         const y = cssY * scaleY
 
-        // Only draw if within canvas bounds
-        if (x >= 0 && x <= canvas.value.width && y >= 0 && y <= canvas.value.height) {
+        // Draw if within canvas bounds (with small tolerance for floating point)
+        // Allow drawing anywhere on the visible canvas
+        if (cssX >= 0 && cssX <= rect.width && cssY >= 0 && cssY <= rect.height) {
           ctx.fillStyle = brushColor.value
           const radius = brushSize.value / 2
           ctx.beginPath()
@@ -949,9 +950,6 @@ export default {
   padding: 20px;
   min-height: 500px;
   overflow: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
   touch-action: none;
 }
