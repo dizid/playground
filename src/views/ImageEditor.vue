@@ -246,13 +246,11 @@ export default {
       if (!imageLoaded.value || !canvas.value || !pendingText.value) return
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
-      const wrapper = canvas.value.parentElement
       const dpr = window.devicePixelRatio || 1
 
       // Calculate position relative to canvas (in CSS coordinates)
-      // Account for canvas wrapper's scroll position
-      const x = (e.clientX - rect.left - wrapper.scrollLeft)
-      const y = (e.clientY - rect.top - wrapper.scrollTop)
+      const x = (e.clientX - rect.left)
+      const y = (e.clientY - rect.top)
 
       const fontWeight = pendingText.value.bold ? 'bold' : 'normal'
       let fontFamily = pendingText.value.font || 'Arial, sans-serif'
@@ -294,13 +292,11 @@ export default {
       if (!imageLoaded.value || !canvas.value) return
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
-      const wrapper = canvas.value.parentElement
       const dpr = window.devicePixelRatio || 1
 
       // Calculate position relative to canvas (in CSS coordinates)
-      // Account for canvas wrapper's scroll position
-      const x = (e.clientX - rect.left - wrapper.scrollLeft)
-      const y = (e.clientY - rect.top - wrapper.scrollTop)
+      const x = (e.clientX - rect.left)
+      const y = (e.clientY - rect.top)
 
       // Use stickerSize ref for dynamic sizing, scaled by DPI
       const scaledStickerSize = stickerSize.value * dpr
@@ -321,12 +317,12 @@ export default {
       if (!isDrawing.value || !imageLoaded.value) return
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
-      const wrapper = canvas.value.parentElement
+      const dpr = window.devicePixelRatio || 1
 
-      // Calculate position relative to canvas (in CSS coordinates)
-      // Account for canvas wrapper's scroll position
-      const x = (e.clientX - rect.left - wrapper.scrollLeft)
-      const y = (e.clientY - rect.top - wrapper.scrollTop)
+      // Calculate position in canvas's CSS coordinate system
+      // The canvas context is already scaled by DPI, so use CSS coords directly
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
 
       ctx.fillStyle = brushColor.value
       const radius = brushSize.value / 2
@@ -367,12 +363,10 @@ export default {
       const touch = e.touches[0]
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
-      const wrapper = canvas.value.parentElement
 
       // Calculate position relative to canvas (in CSS coordinates)
-      // Account for canvas wrapper's scroll position
-      const x = (touch.clientX - rect.left - wrapper.scrollLeft)
-      const y = (touch.clientY - rect.top - wrapper.scrollTop)
+      const x = (touch.clientX - rect.left)
+      const y = (touch.clientY - rect.top)
 
       // Only draw if within canvas bounds
       if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
