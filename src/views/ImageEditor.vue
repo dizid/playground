@@ -498,8 +498,8 @@ export default {
 
     const applyBlurEffect = (imageData) => {
       const data = imageData.data
-      const width = canvas.value.width
-      const height = canvas.value.height
+      const width = imageData.width
+      const height = imageData.height
       const blurRadius = 3
 
       // Simple box blur
@@ -533,8 +533,8 @@ export default {
 
     const applyPixelateEffect = (imageData) => {
       const data = imageData.data
-      const width = canvas.value.width
-      const height = canvas.value.height
+      const width = imageData.width
+      const height = imageData.height
       const pixelSize = 10
 
       for (let y = 0; y < height; y += pixelSize) {
@@ -1088,6 +1088,12 @@ export default {
   }
 }
 
+@media (max-width: 900px) {
+  .editor-canvas {
+    max-height: 400px;
+  }
+}
+
 @media (max-width: 768px) {
   .editor-header h1 {
     font-size: 1.8rem;
@@ -1127,20 +1133,39 @@ export default {
     font-size: 1.4rem;
   }
 
+  .editor-main {
+    gap: 10px;
+  }
+
   .canvas-wrapper {
-    min-height: 250px;
+    min-height: 280px;
+    padding: 8px;
   }
 
   .editor-canvas {
-    max-height: 400px;
+    max-height: 350px;
   }
 
   .controls-section {
-    padding: 12px;
+    padding: 10px;
   }
 
   .text-options {
-    gap: 8px;
+    gap: 6px;
+    font-size: 0.75rem;
+  }
+
+  .editor-sidebar {
+    gap: 10px !important;
+  }
+
+  .random-button-section {
+    padding: 10px;
+  }
+
+  .random-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
   }
 }
 </style>
