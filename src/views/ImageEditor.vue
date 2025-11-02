@@ -33,12 +33,41 @@
             class="file-input"
           >
           <div v-if="imageLoaded" class="button-row">
-            <button class="reset-btn" @click="resetImage">
+            <button class="reset-btn" @click="resetImage" title="Reset image">
               🔄 Reset
             </button>
-            <button class="reset-btn" @click="undo" title="Undo last action">
+            <button class="reset-btn" @click="undo" title="Undo last action (Ctrl+Z)">
               ↶ Undo
             </button>
+          </div>
+        </div>
+
+        <div v-if="imageLoaded" class="controls-section">
+          <h3>🎨 Drawing Tools</h3>
+          <div class="text-options">
+            <label>
+              Brush Color:
+              <input v-model="brushColor" type="color" class="color-picker">
+            </label>
+            <label>
+              Brush Size:
+              <input v-model.number="brushSize" type="range" min="1" max="50" class="slider">
+              <span>{{ brushSize }}px</span>
+            </label>
+          </div>
+        </div>
+
+        <div v-if="imageLoaded" class="controls-section">
+          <h3>🔍 Canvas Controls</h3>
+          <div class="text-options">
+            <label>
+              Zoom:
+              <input v-model.number="zoomLevel" type="range" min="50" max="200" step="10" class="slider">
+              <span>{{ zoomLevel }}%</span>
+            </label>
+            <label>
+              <input v-model="showGrid" type="checkbox"> Show Grid
+            </label>
           </div>
         </div>
 
@@ -87,6 +116,11 @@ export default {
     const stickerSize = ref(120)
     const history = ref([])
     const historyIndex = ref(-1)
+    const brushColor = ref('#ff0000')
+    const brushSize = ref(3)
+    const zoomLevel = ref(100)
+    const showGrid = ref(false)
+    const canvasScale = ref(1)
 
     const saveToHistory = () => {
       if (!canvas.value) return
@@ -176,14 +210,22 @@ export default {
       const x = (e.clientX - rect.left) * scaleX
       const y = (e.clientY - rect.top) * scaleY
 
-      ctx.font = `bold ${pendingText.value.fontSize}px Arial`
+      const fontWeight = pendingText.value.bold ? 'bold' : 'normal'
+      ctx.font = `${fontWeight} ${pendingText.value.fontSize}px ${pendingText.value.font || 'Arial'}`
       ctx.fillStyle = pendingText.value.color
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      ctx.strokeStyle = 'black'
-      ctx.lineWidth = 3
 
-      ctx.strokeText(pendingText.value.text, x, y)
+      if (pendingText.value.outline) {
+        ctx.strokeStyle = pendingText.value.outlineColor
+        ctx.lineWidth = 4
+        ctx.strokeText(pendingText.value.text, x, y)
+      } else {
+        ctx.strokeStyle = 'black'
+        ctx.lineWidth = 3
+        ctx.strokeText(pendingText.value.text, x, y)
+      }
+
       ctx.fillText(pendingText.value.text, x, y)
 
       pendingText.value = null
@@ -226,19 +268,26 @@ export default {
       const x = (e.clientX - rect.left) * scaleX
       const y = (e.clientY - rect.top) * scaleY
 
-      ctx.fillStyle = '#ff0000'
-      ctx.fillRect(x - 3, y - 3, 6, 6)
+      ctx.fillStyle = brushColor.value
+      const radius = brushSize.value / 2
+      ctx.beginPath()
+      ctx.arc(x, y, radius, 0, Math.PI * 2)
+      ctx.fill()
     }
 
     const stopDrawing = () => {
       isDrawing.value = false
     }
 
-    const applyEffect = (effectType) => {
+    const applyEffect = (effectInput) => {
       if (!imageLoaded.value || !canvas.value) return
       const ctx = canvas.value.getContext('2d')
       const imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
       const data = imageData.data
+
+      // Handle both string and object inputs
+      const effectType = typeof effectInput === 'string' ? effectInput : effectInput.type
+      const effectValue = typeof effectInput === 'object' ? effectInput.value : null
 
       switch(effectType) {
         case 'big-eyes':
@@ -256,8 +305,38 @@ export default {
         case 'sepia':
           applySepiaEffect(data)
           break
+        case 'blur':
+          applyBlurEffect(imageData)
+          break
+        case 'pixelate':
+          applyPixelateEffect(imageData)
+          break
+        case 'brightness':
+          applyBrightnessEffect(data, effectValue)
+          break
+        case 'contrast':
+          applyContrastEffect(data, effectValue)
+          break
+        case 'saturation':
+          applySaturationEffect(data, effectValue)
+          break
+        case 'flip-h':
+          applyFlipHorizontal()
+          break
+        case 'flip-v':
+          applyFlipVertical()
+          break
+        case 'rotation':
+          applyRotation(effectValue)
+          break
+        case 'preset':
+          // Presets are handled differently - just apply to effects
+          break
       }
-      ctx.putImageData(imageData, 0, 0)
+
+      if (effectType !== 'flip-h' && effectType !== 'flip-v' && effectType !== 'rotation') {
+        ctx.putImageData(imageData, 0, 0)
+      }
       saveToHistory()
     }
 
@@ -302,6 +381,139 @@ export default {
         data[i + 1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168)
         data[i + 2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131)
       }
+    }
+
+    const applyBlurEffect = (imageData) => {
+      const data = imageData.data
+      const width = canvas.value.width
+      const height = canvas.value.height
+      const blurRadius = 3
+
+      // Simple box blur
+      const tempData = new Uint8ClampedArray(data)
+      for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+          let r = 0, g = 0, b = 0, a = 0, count = 0
+
+          for (let y = -blurRadius; y <= blurRadius; y++) {
+            for (let x = -blurRadius; x <= blurRadius; x++) {
+              const px = Math.min(Math.max(j + x, 0), width - 1)
+              const py = Math.min(Math.max(i + y, 0), height - 1)
+              const idx = (py * width + px) * 4
+
+              r += tempData[idx]
+              g += tempData[idx + 1]
+              b += tempData[idx + 2]
+              a += tempData[idx + 3]
+              count++
+            }
+          }
+
+          const idx = (i * width + j) * 4
+          data[idx] = Math.round(r / count)
+          data[idx + 1] = Math.round(g / count)
+          data[idx + 2] = Math.round(b / count)
+          data[idx + 3] = Math.round(a / count)
+        }
+      }
+    }
+
+    const applyPixelateEffect = (imageData) => {
+      const data = imageData.data
+      const width = canvas.value.width
+      const height = canvas.value.height
+      const pixelSize = 10
+
+      for (let y = 0; y < height; y += pixelSize) {
+        for (let x = 0; x < width; x += pixelSize) {
+          let r = 0, g = 0, b = 0, a = 0
+
+          // Sample first pixel in block
+          const idx = (y * width + x) * 4
+          r = data[idx]
+          g = data[idx + 1]
+          b = data[idx + 2]
+          a = data[idx + 3]
+
+          // Fill entire block with sampled color
+          for (let py = y; py < Math.min(y + pixelSize, height); py++) {
+            for (let px = x; px < Math.min(x + pixelSize, width); px++) {
+              const pidx = (py * width + px) * 4
+              data[pidx] = r
+              data[pidx + 1] = g
+              data[pidx + 2] = b
+              data[pidx + 3] = a
+            }
+          }
+        }
+      }
+    }
+
+    const applyBrightnessEffect = (data, value) => {
+      const brightness = Math.round(value * 2.55)
+      for (let i = 0; i < data.length; i += 4) {
+        data[i] = Math.min(255, Math.max(0, data[i] + brightness))
+        data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + brightness))
+        data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + brightness))
+      }
+    }
+
+    const applyContrastEffect = (data, value) => {
+      const contrast = (value + 100) / 100
+      const intercept = 128 * (1 - contrast)
+      for (let i = 0; i < data.length; i += 4) {
+        data[i] = Math.min(255, Math.max(0, data[i] * contrast + intercept))
+        data[i + 1] = Math.min(255, Math.max(0, data[i + 1] * contrast + intercept))
+        data[i + 2] = Math.min(255, Math.max(0, data[i + 2] * contrast + intercept))
+      }
+    }
+
+    const applySaturationEffect = (data, value) => {
+      const saturation = (value + 100) / 100
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i]
+        const g = data[i + 1]
+        const b = data[i + 2]
+
+        const gray = 0.299 * r + 0.587 * g + 0.114 * b
+
+        data[i] = Math.min(255, Math.max(0, gray + (r - gray) * saturation))
+        data[i + 1] = Math.min(255, Math.max(0, gray + (g - gray) * saturation))
+        data[i + 2] = Math.min(255, Math.max(0, gray + (b - gray) * saturation))
+      }
+    }
+
+    const applyFlipHorizontal = () => {
+      if (!canvas.value) return
+      const ctx = canvas.value.getContext('2d')
+      ctx.translate(canvas.value.width, 0)
+      ctx.scale(-1, 1)
+      const imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
+      ctx.setTransform(1, 0, 0, 1, 0, 0)
+      ctx.putImageData(imageData, 0, 0)
+    }
+
+    const applyFlipVertical = () => {
+      if (!canvas.value) return
+      const ctx = canvas.value.getContext('2d')
+      ctx.translate(0, canvas.value.height)
+      ctx.scale(1, -1)
+      const imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
+      ctx.setTransform(1, 0, 0, 1, 0, 0)
+      ctx.putImageData(imageData, 0, 0)
+    }
+
+    const applyRotation = (angle) => {
+      if (!canvas.value) return
+      const ctx = canvas.value.getContext('2d')
+      const centerX = canvas.value.width / 2
+      const centerY = canvas.value.height / 2
+
+      ctx.translate(centerX, centerY)
+      ctx.rotate((angle * Math.PI) / 180)
+      const imageData = ctx.getImageData(-centerX, -centerY, canvas.value.width, canvas.value.height)
+      ctx.setTransform(1, 0, 0, 1, 0, 0)
+      ctx.putImageData(imageData, 0, 0)
     }
 
     const addTextToImage = (textData) => {
@@ -377,6 +589,33 @@ export default {
       return 'Ready'
     })
 
+    // Keyboard shortcuts
+    const setupKeyboardShortcuts = () => {
+      window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+          if (e.key === 'z') {
+            e.preventDefault()
+            undo()
+          }
+          if (e.key === 'c') {
+            e.preventDefault()
+            copyToClipboard()
+          }
+          if (e.key === 's') {
+            e.preventDefault()
+            downloadImage()
+          }
+        }
+        if (e.key === 'Escape') {
+          currentTool.value = 'draw'
+          pendingSticker.value = null
+          pendingText.value = null
+        }
+      })
+    }
+
+    setupKeyboardShortcuts()
+
     return {
       canvas,
       imageLoaded,
@@ -385,6 +624,10 @@ export default {
       pendingText,
       stickerSize,
       toolStatus,
+      brushColor,
+      brushSize,
+      zoomLevel,
+      showGrid,
       handleImageUpload,
       resetImage,
       handleCanvasClick,
@@ -522,6 +765,47 @@ export default {
   color: #ffd93d;
 }
 
+.text-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.text-options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #aaa;
+}
+
+.text-options input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.text-options input[type="range"] {
+  flex: 1;
+  height: 4px;
+  cursor: pointer;
+}
+
+.text-options span {
+  color: #ffd93d;
+  font-weight: bold;
+  min-width: 40px;
+  text-align: right;
+}
+
+.color-picker {
+  width: 40px;
+  height: 28px;
+  border: 2px solid #ff6b6b;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .file-input {
   width: 100%;
   padding: 8px;
@@ -551,6 +835,17 @@ export default {
 
   .editor-sidebar {
     max-height: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+
+  .controls-section {
+    grid-column: auto;
+  }
+
+  .controls-section:last-child {
+    grid-column: 1 / -1;
   }
 }
 
@@ -559,8 +854,54 @@ export default {
     font-size: 1.8rem;
   }
 
+  .editor-header p {
+    font-size: 0.95rem;
+  }
+
   .canvas-wrapper {
     min-height: 300px;
+    padding: 10px;
+  }
+
+  .editor-sidebar {
+    grid-template-columns: 1fr !important;
+  }
+
+  .controls-section {
+    grid-column: auto !important;
+  }
+
+  .button-row {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-indicator {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+    top: 10px;
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .editor-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .canvas-wrapper {
+    min-height: 250px;
+  }
+
+  .editor-canvas {
+    max-height: 400px;
+  }
+
+  .controls-section {
+    padding: 12px;
+  }
+
+  .text-options {
+    gap: 8px;
   }
 }
 </style>

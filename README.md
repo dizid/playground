@@ -50,19 +50,75 @@ Random advice generator and search tool:
 AI-powered joke and humor generation using ChatGPT.
 
 ### 7. Funny Image Editor (`/image-editor`)
-Hilarious meme and image manipulation tool:
-- **Funny Effects**: Face distortion filters (big eyes, tiny mouth, invert colors, grayscale, sepia)
-- **Text Overlays**: Add bold, Impact-style text with custom colors and sizes
-- **Stickers & Emojis**: Browse and add 100+ funny stickers and emojis in multiple categories:
+Advanced meme and image manipulation tool with professional editing capabilities:
+
+#### Core Features
+- **Image Upload & Management**: Load images, reset, and undo history
+- **Drawing Tools**:
+  - Configurable brush color and size (1-50px)
+  - Smooth circular brush strokes
+  - Real-time feedback
+
+#### Effects Library
+- **Face Distortion**: Big eyes, tiny mouth effects
+- **Image Adjustments**:
+  - Brightness (-100 to +100)
+  - Contrast (-100 to +100)
+  - Saturation (-100 to +100)
+- **Color Filters**: Invert, Grayscale, Sepia, Blur, Pixelate
+- **Transform Effects**:
+  - Flip horizontally & vertically
+  - Rotate (0°, 90°, 180°, 270°)
+- **Preset Filters** (auto-adjust sliders):
+  - Vintage (sepia-like aged effect)
+  - Cool (blue-tinted filter)
+  - Warm (orange-tinted filter)
+  - Vivid (high saturation colors)
+
+#### Text Tools
+- **Font Selection**: Arial, Impact, Comic Sans, Georgia, Courier
+- **Text Customization**:
+  - Font size (10-200px)
+  - Custom color picker
+  - Bold toggle
+  - Outline option with custom outline color
+- **Dynamic Text Placement**: Click canvas to position text
+
+#### Stickers & Emojis
+- **100+ Stickers** organized in 4 categories:
   - Faces: laughing, cool, evil, animal faces
   - Objects: party items, food, fire, stars
   - Actions: explosions, checkmarks, alerts
   - Symbols: hearts, thumbs up, hand gestures
-- **Export Options**:
-  - Download as PNG or JPEG
-  - Copy to clipboard for quick sharing
-  - Generate unique shareable links
-  - Social media optimized presets (Instagram, Twitter, TikTok)
+- **Search feature** for quick emoji discovery
+- **Adjustable sticker size** (40-300px)
+- **Click to place** on canvas
+
+#### Canvas Controls
+- **Zoom levels** (50-200%) for detailed editing
+- **Grid overlay** toggle for alignment
+- **Responsive canvas** adapts to image dimensions
+
+#### Export & Sharing
+- **Download Options**: PNG or JPEG format
+- **Clipboard Copy**: Quick sharing (Ctrl+C)
+- **Social Media Integration**: Share to Instagram, Twitter, TikTok
+- **Unique Share Links**: Generate shareable URLs with localStorage
+- **Social Media Presets**: Pre-optimized dimensions and formats
+
+#### Keyboard Shortcuts
+- **Ctrl+Z / Cmd+Z**: Undo last action
+- **Ctrl+C / Cmd+C**: Copy to clipboard
+- **Ctrl+S / Cmd+S**: Download image
+- **Esc**: Cancel current tool
+
+#### UI/UX Improvements
+- **Collapsible Sections**: Organize effects by category
+- **Tool Status Indicator**: Shows current active tool
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Touch-friendly**: Optimized touch controls for tablets
+- **Visual Feedback**: Hover effects and smooth animations
+- **Accessibility**: Proper labels and keyboard navigation
 
 ## Tech Stack
 
