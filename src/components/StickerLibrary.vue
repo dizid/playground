@@ -1,43 +1,48 @@
 <template>
   <div class="sticker-library">
-    <h3>🎭 Stickers & Emojis</h3>
+    <button class="section-toggle" @click="toggleStickers">
+      <span class="toggle-icon">{{ isOpen ? '▼' : '▶' }}</span>
+      <h3>🎭 Stickers & Emojis</h3>
+    </button>
 
-    <div class="sticker-search">
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="Search stickers..."
-        class="search-input"
-      >
+    <div v-if="isOpen" class="sticker-content">
+      <div class="sticker-search">
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search stickers..."
+          class="search-input"
+        >
+      </div>
+
+      <div class="sticker-tabs">
+        <button
+          v-for="tab in tabs"
+          :key="tab"
+          :class="['tab-btn', { active: activeTab === tab }]"
+          @click="activeTab = tab"
+          :title="`${tab} stickers`"
+        >
+          {{ tabEmojis[tab] }}
+        </button>
+      </div>
+
+      <div class="sticker-grid">
+        <button
+          v-for="sticker in filteredStickers"
+          :key="sticker"
+          class="sticker-btn"
+          :title="`Add ${sticker}`"
+          @click="addStickerWithFeedback(sticker)"
+        >
+          {{ sticker }}
+        </button>
+      </div>
+
+      <p v-if="filteredStickers.length === 0" class="no-stickers">
+        No stickers found
+      </p>
     </div>
-
-    <div class="sticker-tabs">
-      <button
-        v-for="tab in tabs"
-        :key="tab"
-        :class="['tab-btn', { active: activeTab === tab }]"
-        @click="activeTab = tab"
-        :title="`${tab} stickers`"
-      >
-        {{ tabEmojis[tab] }}
-      </button>
-    </div>
-
-    <div class="sticker-grid">
-      <button
-        v-for="sticker in filteredStickers"
-        :key="sticker"
-        class="sticker-btn"
-        :title="`Add ${sticker}`"
-        @click="addStickerWithFeedback(sticker)"
-      >
-        {{ sticker }}
-      </button>
-    </div>
-
-    <p v-if="filteredStickers.length === 0" class="no-stickers">
-      No stickers found
-    </p>
   </div>
 </template>
 
@@ -50,6 +55,7 @@ export default {
   setup(props, { emit }) {
     const activeTab = ref('faces')
     const searchQuery = ref('')
+    const isOpen = ref(true)
 
     const tabs = ['faces', 'objects', 'actions', 'symbols']
 
@@ -109,6 +115,10 @@ export default {
       })
     })
 
+    const toggleStickers = () => {
+      isOpen.value = !isOpen.value
+    }
+
     const addStickerWithFeedback = (sticker) => {
       emit('add-sticker', sticker)
     }
@@ -116,9 +126,11 @@ export default {
     return {
       activeTab,
       searchQuery,
+      isOpen,
       tabs,
       tabEmojis,
       filteredStickers,
+      toggleStickers,
       addStickerWithFeedback
     }
   }
@@ -128,16 +140,48 @@ export default {
 <style scoped>
 .sticker-library {
   background: #16213e;
-  padding: 15px;
   border-radius: 8px;
   border: 2px solid #0f3460;
 }
 
-.sticker-library h3 {
-  margin: 0 0 12px 0;
+.section-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+  color: #ffd93d;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.section-toggle:hover {
+  background: linear-gradient(135deg, #1a3a52 0%, #1a2a42 100%);
+}
+
+.section-toggle h3 {
+  margin: 0;
   font-size: 1.1rem;
   color: #ffd93d;
-  text-align: center;
+  flex: 1;
+}
+
+.toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  min-width: 12px;
+}
+
+.sticker-content {
+  padding: 15px 12px;
+  border-top: 1px solid #0f3460;
 }
 
 .sticker-search {
