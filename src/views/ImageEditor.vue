@@ -637,62 +637,19 @@ export default {
     }
 
     const generateShareLink = () => {
-      if (!imageLoaded.value || !canvas.value) return
+      // Simplified approach: just copy the base editor URL
+      // Users will download the image and manually share it
+      const baseUrl = window.location.hostname === 'localhost'
+        ? 'https://playground.dizid.com'
+        : window.location.origin
 
-      // Generate a unique share ID
-      const shareId = `share-${Date.now()}`
+      const shareUrl = `${baseUrl}/image-editor`
 
-      // Convert canvas to compressed JPEG blob for smaller storage
-      canvas.value.toBlob((blob) => {
-        if (!blob) return
-
-        // Store in IndexedDB (much larger capacity than localStorage)
-        const request = indexedDB.open('ImageEditorDB', 1)
-
-        request.onupgradeneeded = (event) => {
-          const db = event.target.result
-          if (!db.objectStoreNames.contains('shares')) {
-            db.createObjectStore('shares')
-          }
-        }
-
-        request.onsuccess = (event) => {
-          const db = event.target.result
-          const transaction = db.transaction(['shares'], 'readwrite')
-          const store = transaction.objectStore('shares')
-
-          // Store blob with expiration (7 days)
-          const expiresAt = Date.now() + (7 * 24 * 60 * 60 * 1000)
-          store.put({ blob, expiresAt }, shareId)
-
-          // Use production URL (playground.dizid.com) or current origin
-          const baseUrl = window.location.hostname === 'localhost'
-            ? 'https://playground.dizid.com'
-            : window.location.origin
-
-          const shareUrl = `${baseUrl}/image-editor?share=${shareId}`
-
-          navigator.clipboard.writeText(shareUrl).then(() => {
-            console.log('Share link copied:', shareUrl)
-          }).catch(() => {
-            console.log('Share link:', shareUrl)
-          })
-        }
-
-        request.onerror = () => {
-          // Fallback to simple URL if IndexedDB fails
-          const baseUrl = window.location.hostname === 'localhost'
-            ? 'https://playground.dizid.com'
-            : window.location.origin
-          const shareUrl = `${baseUrl}/image-editor`
-
-          navigator.clipboard.writeText(shareUrl).then(() => {
-            console.log('Share link copied (fallback):', shareUrl)
-          }).catch(() => {
-            console.log('Share link (fallback):', shareUrl)
-          })
-        }
-      }, 'image/jpeg', 0.85)
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        console.log('Editor URL copied to clipboard')
+      }).catch(() => {
+        console.log('Editor URL:', shareUrl)
+      })
     }
 
     const toolStatus = computed(() => {

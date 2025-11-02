@@ -86,54 +86,24 @@ export default {
     }
 
     const shareToSocial = (platform) => {
-      // Create share URL
-      const baseUrl = window.location.hostname === 'localhost'
-        ? 'https://playground.dizid.com'
-        : window.location.origin
-
-      const shareId = `share-${Date.now()}`
-      const shareUrl = `${baseUrl}/image-editor?share=${shareId}`
-
-      // Social media share URLs
+      // Simplified approach: Just open the social media platform directly
+      // Users will download the image and manually attach it to their post
       const socialUrls = {
-        instagram: `https://www.instagram.com/`,
-        twitter: `https://twitter.com/intent/tweet?text=Check%20out%20my%20funny%20meme!&url=${encodeURIComponent(shareUrl)}`,
-        tiktok: `https://www.tiktok.com/`
+        instagram: 'https://www.instagram.com/',
+        twitter: 'https://twitter.com/',
+        tiktok: 'https://www.tiktok.com/'
       }
 
-      // First, generate the share link
-      emit('generate-share')
-
-      // Copy URL to clipboard and provide feedback
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        // Show in-app notification that link was copied
-        emit('show-notification', {
-          type: 'success',
-          message: `✅ Link copied to clipboard! Opening ${platform}...`
-        })
-
-        // Delay opening the platform to ensure notification is visible
-        setTimeout(() => {
-          if (platform === 'twitter') {
-            window.open(socialUrls.twitter, '_blank')
-          } else if (platform === 'instagram') {
-            window.open('https://www.instagram.com/', '_blank')
-          } else if (platform === 'tiktok') {
-            window.open('https://www.tiktok.com/', '_blank')
-          }
-        }, 2000)
-      }).catch(() => {
-        // Show error notification
-        emit('show-notification', {
-          type: 'error',
-          message: '❌ Failed to copy link to clipboard. Opening platform anyway...'
-        })
-
-        // Delay opening the platform slightly
-        setTimeout(() => {
-          window.open(socialUrls[platform] || 'https://www.instagram.com/', '_blank')
-        }, 2000)
+      // Show notification about downloading the image first
+      emit('show-notification', {
+        type: 'info',
+        message: `📥 Download your image first, then share it on ${platform}!`
       })
+
+      // Open the social platform after a short delay
+      setTimeout(() => {
+        window.open(socialUrls[platform] || 'https://www.instagram.com/', '_blank')
+      }, 1000)
     }
 
     return {
