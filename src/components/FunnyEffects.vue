@@ -103,20 +103,6 @@
     </div>
 
     <div class="effect-group collapsible">
-      <button class="section-toggle" @click="toggleSection('stickers')">
-        <span class="toggle-icon">{{ openSections.stickers ? '▼' : '▶' }}</span>
-        <h4>Sticker Size</h4>
-      </button>
-      <div v-if="openSections.stickers" class="text-options">
-        <label>
-          Size:
-          <input :value="stickerSize" type="range" min="40" max="300" class="slider" @change="$emit('update:stickerSize', +$event.target.value)">
-          <span>{{ stickerSize }}px</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="effect-group collapsible">
       <button class="section-toggle" @click="toggleSection('text')">
         <span class="toggle-icon">{{ openSections.text ? '▼' : '▶' }}</span>
         <h4>Text Tools</h4>
@@ -138,11 +124,12 @@
           <label>
             Font:
             <select v-model="textFont" class="font-select">
-              <option value="Arial">Arial</option>
-              <option value="Impact">Impact</option>
-              <option value="Comic Sans MS">Comic Sans</option>
-              <option value="Georgia">Georgia</option>
-              <option value="Courier">Courier</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="'Comic Sans MS', cursive">Comic Sans</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="'Courier New', monospace">Courier</option>
+              <option value="Verdana, sans-serif">Verdana</option>
             </select>
           </label>
           <label>
@@ -165,6 +152,20 @@
             <input v-model="textOutlineColor" type="color" class="color-picker">
           </label>
         </div>
+      </div>
+    </div>
+
+    <div class="effect-group collapsible">
+      <button class="section-toggle" @click="toggleSection('stickers')">
+        <span class="toggle-icon">{{ openSections.stickers ? '▼' : '▶' }}</span>
+        <h4>Sticker Size</h4>
+      </button>
+      <div v-if="openSections.stickers" class="text-options">
+        <label>
+          Size:
+          <input :value="stickerSize" type="range" min="40" max="300" class="slider" @change="$emit('update:stickerSize', +$event.target.value)">
+          <span>{{ stickerSize }}px</span>
+        </label>
       </div>
     </div>
 
@@ -194,7 +195,7 @@ export default {
     const textContent = ref('')
     const fontSize = ref(40)
     const textColor = ref('#ff0000')
-    const textFont = ref('Arial')
+    const textFont = ref('Arial, sans-serif')
     const textBold = ref(false)
     const textOutline = ref(false)
     const textOutlineColor = ref('#000000')

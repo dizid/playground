@@ -112,7 +112,7 @@ export default {
           message: `✅ Link copied to clipboard! Opening ${platform}...`
         })
 
-        // Delay opening the platform slightly to ensure notification is visible
+        // Delay opening the platform to ensure notification is visible
         setTimeout(() => {
           if (platform === 'twitter') {
             window.open(socialUrls.twitter, '_blank')
@@ -121,7 +121,7 @@ export default {
           } else if (platform === 'tiktok') {
             window.open('https://www.tiktok.com/', '_blank')
           }
-        }, 500)
+        }, 1000)
       }).catch(() => {
         // Show error notification
         emit('show-notification', {
@@ -132,7 +132,7 @@ export default {
         // Delay opening the platform slightly
         setTimeout(() => {
           window.open(socialUrls[platform] || 'https://www.instagram.com/', '_blank')
-        }, 500)
+        }, 1000)
       })
     }
 

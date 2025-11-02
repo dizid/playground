@@ -34,10 +34,6 @@ const router = createRouter({
       name: 'image-editor',
       component: () => import('../views/ImageEditor.vue')
     },
-    {
-      path: '/alcohol-help',
-      redirect: '/'
-    },
   ]
 })
 

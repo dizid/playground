@@ -231,7 +231,8 @@ export default {
       const y = (e.clientY - rect.top) * scaleY
 
       const fontWeight = pendingText.value.bold ? 'bold' : 'normal'
-      ctx.font = `${fontWeight} ${pendingText.value.fontSize}px ${pendingText.value.font || 'Arial'}`
+      const fontFamily = pendingText.value.font || 'Arial'
+      ctx.font = `${fontWeight} ${pendingText.value.fontSize}px "${fontFamily}"`
       ctx.fillStyle = pendingText.value.color
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
