@@ -1074,17 +1074,9 @@ export default {
 
   .editor-sidebar {
     max-height: none;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 15px;
-  }
-
-  .controls-section {
-    grid-column: auto;
-  }
-
-  .controls-section:last-child {
-    grid-column: 1 / -1;
   }
 }
 
@@ -1106,14 +1098,6 @@ export default {
   .canvas-wrapper {
     min-height: 300px;
     padding: 10px;
-  }
-
-  .editor-sidebar {
-    grid-template-columns: 1fr !important;
-  }
-
-  .controls-section {
-    grid-column: auto !important;
   }
 
   .button-row {
@@ -1156,7 +1140,9 @@ export default {
   }
 
   .editor-sidebar {
-    gap: 10px !important;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
   }
 
   .random-button-section {
