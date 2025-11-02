@@ -111,6 +111,7 @@ export default {
   },
   setup() {
     const canvas = ref(null)
+    const funnyEffects = ref(null)
     const imageLoaded = ref(false)
     const originalImageData = ref(null)
     const isDrawing = ref(false)
@@ -705,6 +706,7 @@ export default {
 
     return {
       canvas,
+      funnyEffects,
       imageLoaded,
       currentTool,
       pendingSticker,
