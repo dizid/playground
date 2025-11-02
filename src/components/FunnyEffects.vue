@@ -270,7 +270,15 @@ export default {
         saturation.value = preset.saturation
         contrast.value = preset.contrast
         brightness.value = preset.brightness
-        emit('apply-effect', { type: 'preset', name: presetName })
+        // Emit with preset data so it can be applied
+        emit('apply-effect', {
+          type: 'preset',
+          name: presetName,
+          saturation: preset.saturation,
+          contrast: preset.contrast,
+          brightness: preset.brightness,
+          value: preset
+        })
       }
     }
 

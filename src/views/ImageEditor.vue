@@ -48,12 +48,18 @@
             <label>
               Brush Color:
               <input v-model="brushColor" type="color" class="color-picker">
+              <span class="color-preview" :style="{ backgroundColor: brushColor }"></span>
             </label>
             <label>
               Brush Size:
               <input v-model.number="brushSize" type="range" min="1" max="50" class="slider">
               <span>{{ brushSize }}px</span>
             </label>
+            <div class="brush-preview">
+              <svg width="60" height="40" style="border: 1px solid #666; border-radius: 4px; background: #0f3460;">
+                <circle :cx="30" :cy="20" :r="brushSize / 2" :fill="brushColor" />
+              </svg>
+            </div>
           </div>
         </div>
 
@@ -321,16 +327,25 @@ export default {
           applySaturationEffect(data, effectValue)
           break
         case 'flip-h':
+          ctx.putImageData(imageData, 0, 0)
           applyFlipHorizontal()
-          break
+          saveToHistory()
+          return
         case 'flip-v':
+          ctx.putImageData(imageData, 0, 0)
           applyFlipVertical()
-          break
+          saveToHistory()
+          return
         case 'rotation':
+          ctx.putImageData(imageData, 0, 0)
           applyRotation(effectValue)
-          break
+          saveToHistory()
+          return
         case 'preset':
-          // Presets are handled differently - just apply to effects
+          // Apply preset - brightness, contrast, saturation in order
+          applyBrightnessEffect(data, effectValue.brightness)
+          applyContrastEffect(data, effectValue.contrast)
+          applySaturationEffect(data, effectValue.saturation)
           break
       }
 
@@ -486,34 +501,91 @@ export default {
     const applyFlipHorizontal = () => {
       if (!canvas.value) return
       const ctx = canvas.value.getContext('2d')
-      ctx.translate(canvas.value.width, 0)
-      ctx.scale(-1, 1)
       const imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
-      ctx.setTransform(1, 0, 0, 1, 0, 0)
+      const data = imageData.data
+      const width = canvas.value.width
+      const height = canvas.value.height
+
+      // Flip pixels horizontally
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width / 2; x++) {
+          const idx1 = (y * width + x) * 4
+          const idx2 = (y * width + (width - 1 - x)) * 4
+
+          // Swap pixels
+          for (let c = 0; c < 4; c++) {
+            const temp = data[idx1 + c]
+            data[idx1 + c] = data[idx2 + c]
+            data[idx2 + c] = temp
+          }
+        }
+      }
+
       ctx.putImageData(imageData, 0, 0)
     }
 
     const applyFlipVertical = () => {
       if (!canvas.value) return
       const ctx = canvas.value.getContext('2d')
-      ctx.translate(0, canvas.value.height)
-      ctx.scale(1, -1)
       const imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
-      ctx.setTransform(1, 0, 0, 1, 0, 0)
+      const data = imageData.data
+      const width = canvas.value.width
+      const height = canvas.value.height
+
+      // Flip pixels vertically
+      for (let y = 0; y < height / 2; y++) {
+        for (let x = 0; x < width; x++) {
+          const idx1 = (y * width + x) * 4
+          const idx2 = ((height - 1 - y) * width + x) * 4
+
+          // Swap pixels
+          for (let c = 0; c < 4; c++) {
+            const temp = data[idx1 + c]
+            data[idx1 + c] = data[idx2 + c]
+            data[idx2 + c] = temp
+          }
+        }
+      }
+
       ctx.putImageData(imageData, 0, 0)
     }
 
     const applyRotation = (angle) => {
-      if (!canvas.value) return
+      if (!canvas.value || angle === 0) return
       const ctx = canvas.value.getContext('2d')
-      const centerX = canvas.value.width / 2
-      const centerY = canvas.value.height / 2
 
-      ctx.translate(centerX, centerY)
-      ctx.rotate((angle * Math.PI) / 180)
-      const imageData = ctx.getImageData(-centerX, -centerY, canvas.value.width, canvas.value.height)
-      ctx.setTransform(1, 0, 0, 1, 0, 0)
+      // For 90, 180, 270 degree rotations, we need to handle canvas resizing for 90/270
+      const radians = (angle * Math.PI) / 180
+      const cos = Math.cos(radians)
+      const sin = Math.sin(radians)
+
+      const imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
+      const width = canvas.value.width
+      const height = canvas.value.height
+
+      if (angle === 90 || angle === 270) {
+        // Swap width and height for 90/270 rotations
+        canvas.value.width = height
+        canvas.value.height = width
+      }
+
+      // Clear and redraw
+      ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
+      ctx.save()
+
+      if (angle === 90) {
+        ctx.translate(height, 0)
+        ctx.rotate((90 * Math.PI) / 180)
+      } else if (angle === 180) {
+        ctx.translate(width, height)
+        ctx.rotate(Math.PI)
+      } else if (angle === 270) {
+        ctx.translate(0, width)
+        ctx.rotate((270 * Math.PI) / 180)
+      }
+
       ctx.putImageData(imageData, 0, 0)
+      ctx.restore()
     }
 
     const addTextToImage = (textData) => {
@@ -799,11 +871,33 @@ export default {
 }
 
 .color-picker {
-  width: 40px;
-  height: 28px;
+  width: 50px;
+  height: 32px;
   border: 2px solid #ff6b6b;
   border-radius: 4px;
   cursor: pointer;
+  flex-shrink: 0;
+}
+
+.color-preview {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #ffd93d;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.brush-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.brush-preview svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .file-input {
