@@ -86,17 +86,12 @@ export default {
     }
 
     const shareToSocial = (platform) => {
-      // Generate share link and open social media
-      const shareId = `share-${Date.now()}`
-
-      // Get canvas data from parent (will be handled by emit)
-      emit('generate-share')
-
       // Create share URL
       const baseUrl = window.location.hostname === 'localhost'
         ? 'https://playground.dizid.com'
         : window.location.origin
 
+      const shareId = `share-${Date.now()}`
       const shareUrl = `${baseUrl}/image-editor?share=${shareId}`
 
       // Social media share URLs
@@ -106,30 +101,22 @@ export default {
         tiktok: `https://www.tiktok.com/`
       }
 
-      // Copy URL to clipboard
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        alert(`✅ Link copied! Opening ${platform}...\n\n${shareUrl}`)
+      // First, generate the share link
+      emit('generate-share')
 
-        // Open social media in new window
+      // Copy URL to clipboard silently
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        // Just open the platform, don't show alerts
         if (platform === 'twitter') {
           window.open(socialUrls.twitter, '_blank')
         } else if (platform === 'instagram') {
           window.open('https://www.instagram.com/', '_blank')
-          alert(`💡 Paste the image link in your Instagram bio or use "Share to Instagram" from your phone!`)
         } else if (platform === 'tiktok') {
           window.open('https://www.tiktok.com/', '_blank')
-          alert(`💡 Download the image and upload it to TikTok!`)
         }
       }).catch(() => {
-        // Fallback if clipboard fails
-        if (platform === 'twitter') {
-          window.open(socialUrls.twitter, '_blank')
-        } else if (platform === 'instagram') {
-          window.open('https://www.instagram.com/', '_blank')
-        } else if (platform === 'tiktok') {
-          window.open('https://www.tiktok.com/', '_blank')
-        }
-        alert(`Share URL:\n${shareUrl}`)
+        // Silent fail - just open the platform
+        window.open(socialUrls[platform] || 'https://www.instagram.com/', '_blank')
       })
     }
 

@@ -288,12 +288,28 @@ export default {
     const applyEffect = (effectInput) => {
       if (!imageLoaded.value || !canvas.value) return
       const ctx = canvas.value.getContext('2d')
-      const imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
-      const data = imageData.data
 
       // Handle both string and object inputs
       const effectType = typeof effectInput === 'string' ? effectInput : effectInput.type
       const effectValue = typeof effectInput === 'object' ? effectInput.value : null
+
+      // For slider effects, always work from original image to avoid cumulative effects
+      const isSliderEffect = ['brightness', 'contrast', 'saturation', 'preset'].includes(effectType)
+
+      let imageData
+      if (isSliderEffect) {
+        // Use original image data as base
+        imageData = new ImageData(
+          new Uint8ClampedArray(originalImageData.value.data),
+          originalImageData.value.width,
+          originalImageData.value.height
+        )
+      } else {
+        // For non-slider effects, get current canvas state
+        imageData = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
+      }
+
+      const data = imageData.data
 
       switch(effectType) {
         case 'big-eyes':
@@ -352,7 +368,11 @@ export default {
       if (effectType !== 'flip-h' && effectType !== 'flip-v' && effectType !== 'rotation') {
         ctx.putImageData(imageData, 0, 0)
       }
-      saveToHistory()
+
+      // Only save non-slider effects to history to avoid cluttering
+      if (!isSliderEffect) {
+        saveToHistory()
+      }
     }
 
     const applyBigEyesEffect = (data) => {
@@ -616,16 +636,15 @@ export default {
           if (blob) {
             const item = new ClipboardItem({ 'image/png': blob })
             navigator.clipboard.write([item]).then(() => {
-              alert('✅ Image copied to clipboard! Paste it anywhere.')
+              // Silent success - image is copied
+              console.log('Image copied to clipboard')
             }).catch((err) => {
               console.error('Clipboard write error:', err)
-              alert('⚠️ Copy failed. Try right-clicking the image to save.')
             })
           }
         }, 'image/png')
       } catch (err) {
-        alert('Failed to copy to clipboard')
-        console.error(err)
+        console.error('Failed to copy to clipboard:', err)
       }
     }
 
@@ -644,9 +663,9 @@ export default {
       const shareUrl = `${baseUrl}/image-editor?share=${shareId}`
 
       navigator.clipboard.writeText(shareUrl).then(() => {
-        alert(`✅ Share link copied!\n\n${shareUrl}`)
+        console.log('Share link copied:', shareUrl)
       }).catch(() => {
-        alert(`Share link:\n${shareUrl}`)
+        console.log('Share link:', shareUrl)
       })
     }
 
