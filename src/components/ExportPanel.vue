@@ -66,7 +66,7 @@
         🔗 Generate Share Link
       </button>
       <p class="share-info">
-        Creates a unique shareable URL for your meme
+        Copy editor link to share with others
       </p>
     </div>
 
