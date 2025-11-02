@@ -179,22 +179,14 @@ export default {
             nextTick(() => {
               const ctx = canvas.value.getContext('2d')
 
-              // Get device pixel ratio for DPI scaling
-              const dpr = window.devicePixelRatio || 1
+              // Set canvas resolution (internal) to match image size
+              // Don't apply DPI scaling to avoid coordinate calculation issues
+              canvas.value.width = img.width
+              canvas.value.height = img.height
 
-              // Set canvas resolution (internal)
-              canvas.value.width = img.width * dpr
-              canvas.value.height = img.height * dpr
-
-              // Set canvas display size (CSS)
-              canvas.value.style.width = img.width + 'px'
-              canvas.value.style.height = img.height + 'px'
-
-              // Scale context to match device pixel ratio
-              ctx.scale(dpr, dpr)
-
+              // Canvas display size is automatically 1:1 with internal resolution when not constrained by CSS
               ctx.drawImage(img, 0, 0)
-              // Store original image data using correct scaled dimensions
+              // Store original image data using canvas dimensions
               originalImageData.value = ctx.getImageData(0, 0, canvas.value.width, canvas.value.height)
               imageLoaded.value = true
 
@@ -244,7 +236,6 @@ export default {
       if (!imageLoaded.value || !canvas.value || !pendingText.value) return
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
-      const dpr = window.devicePixelRatio || 1
 
       // Calculate position in CSS pixel space
       const cssX = e.clientX - rect.left
@@ -272,10 +263,7 @@ export default {
       })
       fontFamily = fontParts.join(', ')
 
-      // Scale font size by DPI since context is scaled
-      const scaledFontSize = pendingText.value.fontSize * dpr
-
-      ctx.font = `${fontWeight} ${scaledFontSize}px ${fontFamily}`
+      ctx.font = `${fontWeight} ${pendingText.value.fontSize}px ${fontFamily}`
       ctx.fillStyle = pendingText.value.color
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
@@ -297,7 +285,6 @@ export default {
       if (!imageLoaded.value || !canvas.value) return
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
-      const dpr = window.devicePixelRatio || 1
 
       // Calculate position in CSS pixel space
       const cssX = e.clientX - rect.left
@@ -310,9 +297,8 @@ export default {
       const x = cssX * scaleX
       const y = cssY * scaleY
 
-      // Use stickerSize ref for dynamic sizing, scaled by DPI
-      const scaledStickerSize = stickerSize.value * dpr
-      ctx.font = `bold ${scaledStickerSize}px Arial`
+      // Use stickerSize ref for dynamic sizing
+      ctx.font = `bold ${stickerSize.value}px Arial`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillText(pendingSticker.value, x, y)
