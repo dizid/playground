@@ -246,6 +246,7 @@ export default {
       if (!imageLoaded.value || !canvas.value || !pendingText.value) return
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
+      const dpr = window.devicePixelRatio || 1
 
       // Calculate position relative to canvas (CSS coordinates are already correct)
       const x = (e.clientX - rect.left)
@@ -266,7 +267,10 @@ export default {
       })
       fontFamily = fontParts.join(', ')
 
-      ctx.font = `${fontWeight} ${pendingText.value.fontSize}px ${fontFamily}`
+      // Scale font size by DPI since context is scaled
+      const scaledFontSize = pendingText.value.fontSize * dpr
+
+      ctx.font = `${fontWeight} ${scaledFontSize}px ${fontFamily}`
       ctx.fillStyle = pendingText.value.color
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
@@ -288,13 +292,15 @@ export default {
       if (!imageLoaded.value || !canvas.value) return
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
+      const dpr = window.devicePixelRatio || 1
 
       // Calculate position relative to canvas (CSS coordinates are already correct)
       const x = (e.clientX - rect.left)
       const y = (e.clientY - rect.top)
 
-      // Use stickerSize ref for dynamic sizing
-      ctx.font = `bold ${stickerSize.value}px Arial`
+      // Use stickerSize ref for dynamic sizing, scaled by DPI
+      const scaledStickerSize = stickerSize.value * dpr
+      ctx.font = `bold ${scaledStickerSize}px Arial`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillText(pendingSticker.value, x, y)
