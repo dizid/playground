@@ -121,7 +121,7 @@ export default {
           } else if (platform === 'tiktok') {
             window.open('https://www.tiktok.com/', '_blank')
           }
-        }, 1000)
+        }, 1500)
       }).catch(() => {
         // Show error notification
         emit('show-notification', {
@@ -132,7 +132,7 @@ export default {
         // Delay opening the platform slightly
         setTimeout(() => {
           window.open(socialUrls[platform] || 'https://www.instagram.com/', '_blank')
-        }, 1000)
+        }, 1500)
       })
     }
 

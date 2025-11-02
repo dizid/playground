@@ -145,10 +145,10 @@ export default {
 
       history.value.push(imageData)
 
-      // Limit history to 4 total (initial + 3 undoable steps)
-      if (history.value.length > 4) {
+      // Limit history to 11 total (initial + 10 undoable steps)
+      if (history.value.length > 11) {
         history.value.shift()
-        historyIndex.value = 3
+        historyIndex.value = 10
       } else {
         historyIndex.value = history.value.length - 1
       }
@@ -231,8 +231,8 @@ export default {
       const y = (e.clientY - rect.top) * scaleY
 
       const fontWeight = pendingText.value.bold ? 'bold' : 'normal'
-      const fontFamily = pendingText.value.font || 'Arial'
-      ctx.font = `${fontWeight} ${pendingText.value.fontSize}px "${fontFamily}"`
+      const fontFamily = pendingText.value.font || 'Arial, sans-serif'
+      ctx.font = `${fontWeight} ${pendingText.value.fontSize}px ${fontFamily}`
       ctx.fillStyle = pendingText.value.color
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
