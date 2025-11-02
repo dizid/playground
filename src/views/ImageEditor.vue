@@ -343,36 +343,48 @@ export default {
     // Touch event handlers for mobile
     const handleTouchStart = (e) => {
       if (!imageLoaded.value || !canvas.value) return
-      e.preventDefault()
+
+      // Only prevent default if we're actually going to draw
+      if (currentTool.value === 'draw') {
+        e.preventDefault()
+      }
 
       const touch = e.touches[0]
-      // Directly call the drawing start function
       isDrawing.value = true
     }
 
     const handleTouchMove = (e) => {
       if (!imageLoaded.value || !canvas.value || !isDrawing.value) return
-      e.preventDefault()
+
+      // Prevent scrolling while drawing
+      if (currentTool.value === 'draw') {
+        e.preventDefault()
+      }
 
       const touch = e.touches[0]
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
 
       // Calculate position relative to canvas (in CSS coordinates)
-      // The canvas context is scaled by DPI, so getBoundingClientRect() coordinates work directly
       const x = (touch.clientX - rect.left)
       const y = (touch.clientY - rect.top)
 
-      ctx.fillStyle = brushColor.value
-      const radius = brushSize.value / 2
-      ctx.beginPath()
-      ctx.arc(x, y, radius, 0, Math.PI * 2)
-      ctx.fill()
+      // Only draw if within canvas bounds
+      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        ctx.fillStyle = brushColor.value
+        const radius = brushSize.value / 2
+        ctx.beginPath()
+        ctx.arc(x, y, radius, 0, Math.PI * 2)
+        ctx.fill()
+      }
     }
 
     const handleTouchEnd = (e) => {
       if (!imageLoaded.value || !canvas.value) return
-      e.preventDefault()
+
+      if (currentTool.value === 'draw') {
+        e.preventDefault()
+      }
 
       if (isDrawing.value) {
         isDrawing.value = false
@@ -889,6 +901,7 @@ export default {
   align-items: center;
   justify-content: center;
   position: relative;
+  touch-action: none;
 }
 
 .upload-prompt {
@@ -918,6 +931,7 @@ export default {
   border-radius: 8px;
   cursor: crosshair;
   background: white;
+  touch-action: none;
 }
 
 .button-row {
