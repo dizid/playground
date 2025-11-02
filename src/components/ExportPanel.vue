@@ -100,10 +100,10 @@ export default {
         message: `📥 Download your image first, then share it on ${platform}!`
       })
 
-      // Open the social platform after a short delay
+      // Open the social platform after a delay
       setTimeout(() => {
         window.open(socialUrls[platform] || 'https://www.instagram.com/', '_blank')
-      }, 1000)
+      }, 3000)
     }
 
     return {

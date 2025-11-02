@@ -117,12 +117,14 @@ export default {
     const isDrawing = ref(false)
     const currentTool = ref('draw')
     const pendingSticker = ref(null)
-    const stickerSize = ref(120)
+    const stickerSize = ref(200)
     const history = ref([])
     const historyIndex = ref(-1)
     const brushColor = ref('#ff0000')
     const brushSize = ref(3)
     const canvasScale = ref(1)
+    const lastX = ref(0)
+    const lastY = ref(0)
     const notification = ref({
       show: false,
       type: 'success',
@@ -226,6 +228,14 @@ export default {
         addTextAtPosition(e)
         currentTool.value = 'draw'
       } else if (currentTool.value === 'draw') {
+        // Initialize last position for drawing
+        const rect = canvas.value.getBoundingClientRect()
+        const cssX = e.clientX - rect.left
+        const cssY = e.clientY - rect.top
+        const scaleX = canvas.value.width / rect.width
+        const scaleY = canvas.value.height / rect.height
+        lastX.value = cssX * scaleX
+        lastY.value = cssY * scaleY
         isDrawing.value = true
       }
     }
@@ -308,6 +318,14 @@ export default {
 
     const startDrawing = (e) => {
       if (!imageLoaded.value) return
+      // Initialize last position for drawing
+      const rect = canvas.value.getBoundingClientRect()
+      const cssX = e.clientX - rect.left
+      const cssY = e.clientY - rect.top
+      const scaleX = canvas.value.width / rect.width
+      const scaleY = canvas.value.height / rect.height
+      lastX.value = cssX * scaleX
+      lastY.value = cssY * scaleY
       isDrawing.value = true
     }
 
@@ -316,27 +334,30 @@ export default {
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
 
-      // The key issue: canvas has internal resolution (width/height attributes)
-      // vs CSS display size (style.width/style.height or from CSS rules)
-      // We need to scale coordinates from CSS space to internal resolution space
-
       // Calculate position in CSS pixel space
       const cssX = e.clientX - rect.left
       const cssY = e.clientY - rect.top
 
       // Scale to internal canvas resolution
-      // rect.width/height are CSS pixels, canvas.width/height are internal pixels
       const scaleX = canvas.value.width / rect.width
       const scaleY = canvas.value.height / rect.height
 
       const x = cssX * scaleX
       const y = cssY * scaleY
 
-      ctx.fillStyle = brushColor.value
-      const radius = brushSize.value / 2
+      // Draw line from last position to current position for smooth strokes
+      ctx.strokeStyle = brushColor.value
+      ctx.lineWidth = brushSize.value
+      ctx.lineCap = 'round'
+      ctx.lineJoin = 'round'
       ctx.beginPath()
-      ctx.arc(x, y, radius, 0, Math.PI * 2)
-      ctx.fill()
+      ctx.moveTo(lastX.value, lastY.value)
+      ctx.lineTo(x, y)
+      ctx.stroke()
+
+      // Update last position
+      lastX.value = x
+      lastY.value = y
     }
 
     const stopDrawing = () => {
@@ -739,6 +760,14 @@ export default {
       canvasElement.addEventListener('touchstart', (e) => {
         if (currentTool.value === 'draw') {
           e.preventDefault()
+          const touch = e.touches[0]
+          const rect = canvas.value.getBoundingClientRect()
+          const cssX = touch.clientX - rect.left
+          const cssY = touch.clientY - rect.top
+          const scaleX = canvas.value.width / rect.width
+          const scaleY = canvas.value.height / rect.height
+          lastX.value = cssX * scaleX
+          lastY.value = cssY * scaleY
           isDrawing.value = true
         } else if (currentTool.value === 'text' || currentTool.value === 'sticker') {
           e.preventDefault()
@@ -765,14 +794,21 @@ export default {
         const x = cssX * scaleX
         const y = cssY * scaleY
 
-        // Draw if within canvas bounds (with small tolerance for floating point)
-        // Allow drawing anywhere on the visible canvas
+        // Draw if within canvas bounds
         if (cssX >= 0 && cssX <= rect.width && cssY >= 0 && cssY <= rect.height) {
-          ctx.fillStyle = brushColor.value
-          const radius = brushSize.value / 2
+          // Draw line from last position to current position for smooth strokes
+          ctx.strokeStyle = brushColor.value
+          ctx.lineWidth = brushSize.value
+          ctx.lineCap = 'round'
+          ctx.lineJoin = 'round'
           ctx.beginPath()
-          ctx.arc(x, y, radius, 0, Math.PI * 2)
-          ctx.fill()
+          ctx.moveTo(lastX.value, lastY.value)
+          ctx.lineTo(x, y)
+          ctx.stroke()
+
+          // Update last position
+          lastX.value = x
+          lastY.value = y
         }
       }, { passive: false })
 
