@@ -248,9 +248,16 @@ export default {
       const rect = canvas.value.getBoundingClientRect()
       const dpr = window.devicePixelRatio || 1
 
-      // Calculate position relative to canvas (in CSS coordinates)
-      const x = (e.clientX - rect.left)
-      const y = (e.clientY - rect.top)
+      // Calculate position in CSS pixel space
+      const cssX = e.clientX - rect.left
+      const cssY = e.clientY - rect.top
+
+      // Scale to internal canvas resolution
+      const scaleX = canvas.value.width / rect.width
+      const scaleY = canvas.value.height / rect.height
+
+      const x = cssX * scaleX
+      const y = cssY * scaleY
 
       const fontWeight = pendingText.value.bold ? 'bold' : 'normal'
       let fontFamily = pendingText.value.font || 'Arial, sans-serif'
@@ -294,9 +301,16 @@ export default {
       const rect = canvas.value.getBoundingClientRect()
       const dpr = window.devicePixelRatio || 1
 
-      // Calculate position relative to canvas (in CSS coordinates)
-      const x = (e.clientX - rect.left)
-      const y = (e.clientY - rect.top)
+      // Calculate position in CSS pixel space
+      const cssX = e.clientX - rect.left
+      const cssY = e.clientY - rect.top
+
+      // Scale to internal canvas resolution
+      const scaleX = canvas.value.width / rect.width
+      const scaleY = canvas.value.height / rect.height
+
+      const x = cssX * scaleX
+      const y = cssY * scaleY
 
       // Use stickerSize ref for dynamic sizing, scaled by DPI
       const scaledStickerSize = stickerSize.value * dpr
@@ -317,12 +331,22 @@ export default {
       if (!isDrawing.value || !imageLoaded.value) return
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
-      const dpr = window.devicePixelRatio || 1
 
-      // Calculate position in canvas's CSS coordinate system
-      // The canvas context is already scaled by DPI, so use CSS coords directly
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
+      // The key issue: canvas has internal resolution (width/height attributes)
+      // vs CSS display size (style.width/style.height or from CSS rules)
+      // We need to scale coordinates from CSS space to internal resolution space
+
+      // Calculate position in CSS pixel space
+      const cssX = e.clientX - rect.left
+      const cssY = e.clientY - rect.top
+
+      // Scale to internal canvas resolution
+      // rect.width/height are CSS pixels, canvas.width/height are internal pixels
+      const scaleX = canvas.value.width / rect.width
+      const scaleY = canvas.value.height / rect.height
+
+      const x = cssX * scaleX
+      const y = cssY * scaleY
 
       ctx.fillStyle = brushColor.value
       const radius = brushSize.value / 2
@@ -364,12 +388,19 @@ export default {
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
 
-      // Calculate position relative to canvas (in CSS coordinates)
-      const x = (touch.clientX - rect.left)
-      const y = (touch.clientY - rect.top)
+      // Calculate position in CSS pixel space
+      const cssX = touch.clientX - rect.left
+      const cssY = touch.clientY - rect.top
+
+      // Scale to internal canvas resolution
+      const scaleX = canvas.value.width / rect.width
+      const scaleY = canvas.value.height / rect.height
+
+      const x = cssX * scaleX
+      const y = cssY * scaleY
 
       // Only draw if within canvas bounds
-      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+      if (x >= 0 && x <= canvas.value.width && y >= 0 && y <= canvas.value.height) {
         ctx.fillStyle = brushColor.value
         const radius = brushSize.value / 2
         ctx.beginPath()
