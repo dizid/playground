@@ -34,6 +34,11 @@ const router = createRouter({
       name: 'grumpy-ai',
       component: () => import('../views/ChatGPT.vue')
     },
+    {
+      path: '/image-editor',
+      name: 'image-editor',
+      component: () => import('../views/ImageEditor.vue')
+    },
   ]
 })
 

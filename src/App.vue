@@ -10,6 +10,7 @@
     <RouterLink to="/grumpy-ai">Grumpy AI</RouterLink>
     <RouterLink to="/alcohol-help">Alcohol Support</RouterLink>
     <RouterLink to="/age">Guess your Age</RouterLink>
+    <RouterLink to="/image-editor">Image Editor</RouterLink>
 
   </nav>
   <main>
