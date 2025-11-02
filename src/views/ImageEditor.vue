@@ -24,6 +24,9 @@
           @mousemove="draw"
           @mouseup="stopDrawing"
           @mouseleave="stopDrawing"
+          @touchstart="handleTouchStart"
+          @touchmove="handleTouchMove"
+          @touchend="handleTouchEnd"
         ></canvas>
       </div>
 
@@ -178,8 +181,21 @@ export default {
           img.onload = () => {
             nextTick(() => {
               const ctx = canvas.value.getContext('2d')
-              canvas.value.width = img.width
-              canvas.value.height = img.height
+
+              // Get device pixel ratio for DPI scaling
+              const dpr = window.devicePixelRatio || 1
+
+              // Set canvas resolution (internal)
+              canvas.value.width = img.width * dpr
+              canvas.value.height = img.height * dpr
+
+              // Set canvas display size (CSS)
+              canvas.value.style.width = img.width + 'px'
+              canvas.value.style.height = img.height + 'px'
+
+              // Scale context to match device pixel ratio
+              ctx.scale(dpr, dpr)
+
               ctx.drawImage(img, 0, 0)
               originalImageData.value = ctx.getImageData(0, 0, img.width, img.height)
               imageLoaded.value = true
@@ -231,11 +247,9 @@ export default {
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
 
-      // Calculate position relative to canvas with proper scaling
-      const scaleX = canvas.value.width / rect.width
-      const scaleY = canvas.value.height / rect.height
-      const x = (e.clientX - rect.left) * scaleX
-      const y = (e.clientY - rect.top) * scaleY
+      // Calculate position relative to canvas (CSS coordinates are already correct)
+      const x = (e.clientX - rect.left)
+      const y = (e.clientY - rect.top)
 
       const fontWeight = pendingText.value.bold ? 'bold' : 'normal'
       let fontFamily = pendingText.value.font || 'Arial, sans-serif'
@@ -275,11 +289,9 @@ export default {
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
 
-      // Calculate position relative to canvas with proper scaling
-      const scaleX = canvas.value.width / rect.width
-      const scaleY = canvas.value.height / rect.height
-      const x = (e.clientX - rect.left) * scaleX
-      const y = (e.clientY - rect.top) * scaleY
+      // Calculate position relative to canvas (CSS coordinates are already correct)
+      const x = (e.clientX - rect.left)
+      const y = (e.clientY - rect.top)
 
       // Use stickerSize ref for dynamic sizing
       ctx.font = `bold ${stickerSize.value}px Arial`
@@ -299,12 +311,12 @@ export default {
       if (!isDrawing.value || !imageLoaded.value) return
       const ctx = canvas.value.getContext('2d')
       const rect = canvas.value.getBoundingClientRect()
+      const dpr = window.devicePixelRatio || 1
 
       // Calculate position relative to canvas with proper scaling
-      const scaleX = canvas.value.width / rect.width
-      const scaleY = canvas.value.height / rect.height
-      const x = (e.clientX - rect.left) * scaleX
-      const y = (e.clientY - rect.top) * scaleY
+      // Account for both CSS display size and DPI scaling
+      const x = (e.clientX - rect.left)
+      const y = (e.clientY - rect.top)
 
       ctx.fillStyle = brushColor.value
       const radius = brushSize.value / 2
@@ -319,6 +331,39 @@ export default {
         // Save drawing to history when user stops
         saveToHistory()
       }
+    }
+
+    // Touch event handlers for mobile
+    const handleTouchStart = (e) => {
+      e.preventDefault()
+      if (!imageLoaded.value || !canvas.value) return
+
+      const touch = e.touches[0]
+      const mouseEvent = new MouseEvent('mousedown', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      })
+      canvas.value.dispatchEvent(mouseEvent)
+    }
+
+    const handleTouchMove = (e) => {
+      e.preventDefault()
+      if (!imageLoaded.value || !canvas.value) return
+
+      const touch = e.touches[0]
+      const mouseEvent = new MouseEvent('mousemove', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      })
+      canvas.value.dispatchEvent(mouseEvent)
+    }
+
+    const handleTouchEnd = (e) => {
+      e.preventDefault()
+      if (!imageLoaded.value || !canvas.value) return
+
+      const mouseEvent = new MouseEvent('mouseup', {})
+      canvas.value.dispatchEvent(mouseEvent)
     }
 
     const applyEffect = (effectInput) => {
@@ -721,6 +766,9 @@ export default {
       handleCanvasClick,
       draw,
       stopDrawing,
+      handleTouchStart,
+      handleTouchMove,
+      handleTouchEnd,
       applyEffect,
       addTextToImage,
       addSticker,
