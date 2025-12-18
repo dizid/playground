@@ -26,7 +26,7 @@
     <!-- Conversation messages -->
     <div class="messages-container">
       <div v-for="(message, index) in messages" :key="index" class="message" :class="message.role">
-        <strong>{{ message.role === 'user' ? 'You' : currentPersonaDisplay }}:</strong> {{ message.content }}
+        <strong>{{ message.role === 'user' ? 'You' : (message.persona || currentPersonaDisplay) }}:</strong> {{ message.content }}
       </div>
     </div>
 
@@ -104,8 +104,8 @@ async function sendMessage() {
 
     const result = await response.json();
 
-    // Add response to messages
-    messages.value.push({ role: 'assistant', content: result.message });
+    // Add response to messages (store persona so it doesn't change when user switches characters)
+    messages.value.push({ role: 'assistant', content: result.message, persona: currentPersonaDisplay.value });
 
     // Clear input
     inputValue.value = '';
