@@ -32,10 +32,6 @@
         <span class="icon"><i class="fa fa-paw"></i></span>
         <span class="name">Daily Dog</span>
       </a>
-      <a href="https://bouw.dizid.com" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-building"></i></span>
-        <span class="name">Bouw</span>
-      </a>
       <a href="https://3p.tnxz.nl" target="_blank" class="app-card">
         <span class="icon"><i class="fa fa-balance-scale"></i></span>
         <span class="name">3P Decision Maker</span>
