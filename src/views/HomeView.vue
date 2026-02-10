@@ -72,6 +72,18 @@
         <span class="icon"><i class="fa fa-hand-paper-o"></i></span>
         <span class="name">Palmdetective</span>
       </a>
+      <a href="https://fluid33.netlify.app/" target="_blank" class="app-card">
+        <span class="icon"><i class="fa fa-tint"></i></span>
+        <span class="name">Fluid33</span>
+      </a>
+      <a href="https://dizid-agenteval.netlify.app/" target="_blank" class="app-card">
+        <span class="icon"><i class="fa fa-cogs"></i></span>
+        <span class="name">Agent Eval</span>
+      </a>
+      <a href="https://tunecraft.music" target="_blank" class="app-card">
+        <span class="icon"><i class="fa fa-music"></i></span>
+        <span class="name">TuneCraft</span>
+      </a>
     </div>
   </div>
 </template>
