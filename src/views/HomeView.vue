@@ -8,6 +8,18 @@
 
     <h2>My Apps</h2>
     <div class="apps-grid">
+      <a href="https://fluid33.netlify.app/" target="_blank" class="app-card">
+        <span class="icon"><i class="fa fa-tint"></i></span>
+        <span class="name">Fluid 33</span>
+      </a>
+      <a href="https://dizid-agenteval.netlify.app/" target="_blank" class="app-card">
+        <span class="icon"><i class="fa fa-bar-chart"></i></span>
+        <span class="name">Agent Eval</span>
+      </a>
+      <a href="https://tunecraft.music" target="_blank" class="app-card">
+        <span class="icon"><i class="fa fa-music"></i></span>
+        <span class="name">TuneCraft</span>
+      </a>
       <a href="https://happyroam.travel" target="_blank" class="app-card">
         <span class="icon"><i class="fa fa-plane"></i></span>
         <span class="name">Happy Roam Travel</span>
