@@ -24,107 +24,176 @@ const apps = [
   { name: 'NFT Creator', url: 'https://nft.tnxz.nl', icon: 'fa-picture-o', description: 'Create and mint NFT artwork easily.' },
   { name: 'Palmdetective', url: 'https://palmdetective.mystrikingly.com', icon: 'fa-hand-paper-o', description: 'AI-powered palm reading and analysis tool.' },
   { name: 'FireHorse', url: 'https://firehorse.info/', icon: 'fa-fire', description: 'Year of the Fire Horse 2026 encyclopedia and zodiac tools.' },
-  { name: 'Wu Xing Zodiac', url: 'https://wuxingzodiac.me/', icon: 'fa-yin-yang', description: 'Discover your Chinese zodiac sign from the 60 Five Element combinations.' },
+  { name: 'Wu Xing Zodiac', url: 'https://wuxingzodiac.me/', icon: 'fa-refresh', description: 'Discover your Chinese zodiac sign from the 60 Five Element combinations.' },
   { name: 'StatPilot', url: 'https://statpilot.mom/', icon: 'fa-line-chart', description: 'Consolidate multiple GA4 properties into one dashboard.' },
 ]
+
+// Pad index to 2 digits
+function pad(n) {
+  return String(n).padStart(2, '0')
+}
 </script>
 
 <template>
   <div class="home">
-    <h1>Digital Playground</h1>
-    <p class="intro">
-      Welcome to my playground. Here I test small Vue 3 projects. Recently I have been learning to use Venice.ai effectively to create code faster.
-      And it works great, especially for smaller webapps.
-    </p>
 
-    <div class="view-header">
-      <h2>My Apps</h2>
-      <div class="view-toggle">
-        <button @click="viewMode = 'list'" :class="{ active: viewMode === 'list' }" title="List view">
+    <!-- Hero -->
+    <div class="hero">
+      <h1 class="hero-title">
+        <span>DIGITAL</span>
+        <span class="hero-accent">PLAYGROUND</span>
+      </h1>
+      <p class="hero-sub">{{ apps.length }} experiments, tools &amp; toys by dizid</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <span class="controls-label">Projects</span>
+      <div class="toggle">
+        <button
+          @click="viewMode = 'list'"
+          :class="{ active: viewMode === 'list' }"
+          title="List view"
+        >
           <i class="fa fa-list"></i>
         </button>
-        <button @click="viewMode = 'grid'" :class="{ active: viewMode === 'grid' }" title="Grid view">
+        <button
+          @click="viewMode = 'grid'"
+          :class="{ active: viewMode === 'grid' }"
+          title="Grid view"
+        >
           <i class="fa fa-th"></i>
         </button>
       </div>
     </div>
 
-    <!-- List view (default) -->
+    <!-- List View -->
     <div v-if="viewMode === 'list'" class="apps-list">
-      <a v-for="app in apps" :key="app.url" :href="app.url" target="_blank" class="app-row">
-        <span class="app-row-name">{{ app.name }}</span>
-        <span class="app-row-desc">{{ app.description }}</span>
+      <a
+        v-for="(app, i) in apps"
+        :key="app.url"
+        :href="app.url"
+        target="_blank"
+        class="app-row"
+      >
+        <span class="row-index">{{ pad(i + 1) }}</span>
+        <span class="row-body">
+          <span class="row-name">{{ app.name }}</span>
+          <span class="row-desc">{{ app.description }}</span>
+        </span>
+        <span class="row-arrow">&rarr;</span>
       </a>
     </div>
 
-    <!-- Grid view -->
+    <!-- Grid View -->
     <div v-else class="apps-grid">
-      <a v-for="app in apps" :key="app.url" :href="app.url" target="_blank" class="app-card">
-        <span class="icon"><i :class="'fa ' + app.icon"></i></span>
-        <span class="name">{{ app.name }}</span>
+      <a
+        v-for="(app, i) in apps"
+        :key="app.url"
+        :href="app.url"
+        target="_blank"
+        class="grid-card"
+        :style="{ animationDelay: (i * 0.03) + 's' }"
+      >
+        <span class="card-icon"><i :class="'fa ' + app.icon"></i></span>
+        <span class="card-name">{{ app.name }}</span>
       </a>
     </div>
+
   </div>
 </template>
 
 <style scoped>
 .home {
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 0 1rem 2rem;
 }
 
-.intro {
-  font-size: 1.1rem;
-  opacity: 0.9;
-  max-width: 700px;
+/* ─── Hero ─── */
+.hero {
+  padding: 3rem 0 2rem;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 2rem;
 }
 
-/* View header with toggle */
-.view-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 2.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.view-header h2 {
+.hero-title {
+  font-family: 'Space Grotesk', var(--sans-font);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
   margin: 0;
-}
-
-.view-toggle {
   display: flex;
-  gap: 0.25rem;
+  flex-direction: column;
 }
 
-.view-toggle button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--accent-bg);
-  color: var(--text-light, #888);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.view-toggle button:hover {
-  border-color: var(--accent);
+.hero-accent {
   color: var(--accent);
 }
 
-.view-toggle button.active {
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
+.hero-sub {
+  font-family: 'Space Mono', var(--mono-font);
+  font-size: 0.8rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 1.25rem;
+  margin-bottom: 0;
 }
 
-/* List view */
+/* ─── Controls ─── */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.controls-label {
+  font-family: 'Space Mono', var(--mono-font);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-light);
+}
+
+.toggle {
+  display: flex;
+  border: 2px solid var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-light);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.toggle button:hover {
+  background: var(--accent-light);
+  color: var(--text);
+  filter: none;
+}
+
+.toggle button.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ─── List View ─── */
 .apps-list {
   display: flex;
   flex-direction: column;
@@ -132,121 +201,183 @@ const apps = [
 
 .app-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 1rem;
-  padding: 0.75rem 0.5rem;
-  border-bottom: 1px solid var(--border);
+  padding: 0.9rem 0.75rem;
   text-decoration: none;
   color: var(--text);
-  transition: background 0.15s;
-}
-
-.app-row:first-child {
-  border-top: 1px solid var(--border);
+  border-left: 3px solid transparent;
+  transition: border-color 0.2s, background 0.15s, padding-left 0.2s;
+  position: relative;
 }
 
 .app-row:hover {
+  border-left-color: var(--accent);
   background: var(--accent-bg);
+  padding-left: 1rem;
 }
 
-.app-row-name {
-  font-weight: 600;
+.row-index {
+  font-family: 'Space Mono', var(--mono-font);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-light);
+  opacity: 0.3;
+  min-width: 2rem;
+  flex-shrink: 0;
+}
+
+.app-row:hover .row-index {
+  opacity: 0.6;
   color: var(--accent);
+}
+
+.row-body {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.row-name {
+  font-family: 'Space Grotesk', var(--sans-font);
+  font-weight: 700;
+  font-size: 1rem;
   white-space: nowrap;
-  min-width: 160px;
+  flex-shrink: 0;
 }
 
-.app-row-desc {
-  color: var(--text-light, #888);
-  font-size: 0.9rem;
+.row-desc {
+  font-family: 'Space Mono', var(--mono-font);
+  font-size: 0.75rem;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Grid view */
+.row-arrow {
+  font-size: 1.1rem;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.app-row:hover .row-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ─── Grid View ─── */
 .apps-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+  gap: 1.25rem;
 }
 
-.app-card {
+.grid-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem 1rem;
+  padding: 1.75rem 1rem 1.25rem;
   background: var(--accent-bg);
-  border-radius: 12px;
+  border: 2px solid var(--border);
+  box-shadow: 4px 4px 0 var(--border);
   text-decoration: none;
   color: var(--text);
-  transition: transform 0.2s, box-shadow 0.2s;
-  border: 1px solid var(--border);
+  transition: transform 0.15s, box-shadow 0.15s;
+  animation: cardIn 0.3s ease both;
 }
 
-.app-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  border-color: var(--accent);
+.grid-card:hover {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--border);
 }
 
-.app-card .icon {
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: 50px;
+  height: 50px;
   background: var(--accent);
   border-radius: 50%;
   margin-bottom: 0.75rem;
 }
 
-.app-card .icon i {
-  font-size: 1.5rem;
-  color: var(--bg);
+.card-icon i {
+  font-size: 1.3rem;
+  color: #fff;
 }
 
-.app-card .name {
-  font-size: 0.95rem;
-  font-weight: 500;
+.card-name {
+  font-family: 'Space Grotesk', var(--sans-font);
+  font-size: 0.85rem;
+  font-weight: 600;
   text-align: center;
   line-height: 1.3;
 }
 
-/* Mobile */
-@media (max-width: 500px) {
-  .app-row {
+/* ─── Mobile ─── */
+@media (max-width: 600px) {
+  .hero {
+    padding: 2rem 0 1.5rem;
+  }
+
+  .row-body {
     flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.6rem 0.5rem;
+    gap: 0.15rem;
   }
 
-  .app-row-name {
-    min-width: unset;
+  .row-desc {
+    white-space: normal;
+    font-size: 0.7rem;
   }
 
-  .app-row-desc {
-    font-size: 0.8rem;
+  .row-arrow {
+    display: none;
   }
 
   .apps-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
+    gap: 0.85rem;
   }
 
-  .app-card {
-    padding: 1rem 0.75rem;
+  .grid-card {
+    padding: 1.25rem 0.75rem 1rem;
+    box-shadow: 3px 3px 0 var(--border);
   }
 
-  .app-card .icon {
-    width: 48px;
-    height: 48px;
+  .grid-card:hover {
+    transform: translate(3px, 3px);
   }
 
-  .app-card .icon i {
-    font-size: 1.25rem;
+  .card-icon {
+    width: 44px;
+    height: 44px;
   }
 
-  .app-card .name {
-    font-size: 0.85rem;
+  .card-icon i {
+    font-size: 1.1rem;
+  }
+
+  .card-name {
+    font-size: 0.8rem;
   }
 }
 </style>
