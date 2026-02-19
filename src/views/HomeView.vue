@@ -1,3 +1,34 @@
+<script setup>
+import { ref } from 'vue'
+
+const viewMode = ref('list')
+
+const apps = [
+  { name: 'Fluid 33', url: 'https://fluid33.netlify.app/', icon: 'fa-tint', description: 'Explore fluid intimacy through guided interactive experiences.' },
+  { name: 'Agent Eval', url: 'https://dizid-agenteval.netlify.app/', icon: 'fa-bar-chart', description: 'AI agent evaluation and marketplace platform.' },
+  { name: 'TuneCraft', url: 'https://tunecraft.music', icon: 'fa-music', description: 'A personal music taste layer on top of YouTube.' },
+  { name: 'Happy Roam Travel', url: 'https://happyroam.travel', icon: 'fa-plane', description: 'AI-powered personalized Thailand travel guide.' },
+  { name: 'LaunchPilot', url: 'https://launchpilot.marketing', icon: 'fa-rocket', description: 'AI marketing automation platform for businesses.' },
+  { name: 'Unplugged CV', url: 'https://unplugged.cv', icon: 'fa-file-text-o', description: 'AI-powered tailored CVs and cover letters from job postings.' },
+  { name: 'Read My Mind', url: 'https://readmymind.me', icon: 'fa-lightbulb-o', description: 'AI self-analysis and mind-reading experiment.' },
+  { name: 'Parody Humor', url: 'https://parodyhumor.lol', icon: 'fa-smile-o', description: 'Transform any website into a humorous parody version.' },
+  { name: 'Daily Dog', url: 'https://dailydog.dizid.com', icon: 'fa-paw', description: 'Your daily dose of dog content and cuteness.' },
+  { name: '3P Decision Maker', url: 'https://3p.tnxz.nl', icon: 'fa-balance-scale', description: 'Systematic decision-making toolkit using the 3 P\'s method.' },
+  { name: 'Crypto Info', url: 'https://crypto.tnxz.nl', icon: 'fa-bitcoin', description: 'AI-driven cryptocurrency price forecasting dashboard.' },
+  { name: 'Site Improver', url: 'http://site-improver.netlify.app', icon: 'fa-wrench', description: 'Automated website analysis and rebuilding for SMBs.' },
+  { name: 'MF Dizid', url: 'http://mf-dizid.netlify.app', icon: 'fa-magic', description: 'Creative digital experiments and magic effects.' },
+  { name: 'URL Shortener', url: 'https://tnxz.nl', icon: 'fa-link', description: 'Simple and fast URL shortening service.' },
+  { name: 'Find Happiness', url: 'https://geluk.tnxz.nl', icon: 'fa-heart', description: 'Discover what makes you happy with guided prompts.' },
+  { name: 'Google 4 Games', url: 'https://google4games.com', icon: 'fa-gamepad', description: 'Curated game search powered by Google.' },
+  { name: 'Dizid Homepage', url: 'https://dizid.com', icon: 'fa-home', description: 'Official Dizid Web Development homepage.' },
+  { name: 'NFT Creator', url: 'https://nft.tnxz.nl', icon: 'fa-picture-o', description: 'Create and mint NFT artwork easily.' },
+  { name: 'Palmdetective', url: 'https://palmdetective.mystrikingly.com', icon: 'fa-hand-paper-o', description: 'AI-powered palm reading and analysis tool.' },
+  { name: 'FireHorse', url: 'https://firehorse.info/', icon: 'fa-fire', description: 'Year of the Fire Horse 2026 encyclopedia and zodiac tools.' },
+  { name: 'Wu Xing Zodiac', url: 'https://wuxingzodiac.me/', icon: 'fa-yin-yang', description: 'Discover your Chinese zodiac sign from the 60 Five Element combinations.' },
+  { name: 'StatPilot', url: 'https://statpilot.mom/', icon: 'fa-line-chart', description: 'Consolidate multiple GA4 properties into one dashboard.' },
+]
+</script>
+
 <template>
   <div class="home">
     <h1>Digital Playground</h1>
@@ -6,83 +37,31 @@
       And it works great, especially for smaller webapps.
     </p>
 
-    <h2>My Apps</h2>
-    <div class="apps-grid">
-      <a href="https://fluid33.netlify.app/" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-tint"></i></span>
-        <span class="name">Fluid 33</span>
+    <div class="view-header">
+      <h2>My Apps</h2>
+      <div class="view-toggle">
+        <button @click="viewMode = 'list'" :class="{ active: viewMode === 'list' }" title="List view">
+          <i class="fa fa-list"></i>
+        </button>
+        <button @click="viewMode = 'grid'" :class="{ active: viewMode === 'grid' }" title="Grid view">
+          <i class="fa fa-th"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- List view (default) -->
+    <div v-if="viewMode === 'list'" class="apps-list">
+      <a v-for="app in apps" :key="app.url" :href="app.url" target="_blank" class="app-row">
+        <span class="app-row-name">{{ app.name }}</span>
+        <span class="app-row-desc">{{ app.description }}</span>
       </a>
-      <a href="https://dizid-agenteval.netlify.app/" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-bar-chart"></i></span>
-        <span class="name">Agent Eval</span>
-      </a>
-      <a href="https://tunecraft.music" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-music"></i></span>
-        <span class="name">TuneCraft</span>
-      </a>
-      <a href="https://happyroam.travel" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-plane"></i></span>
-        <span class="name">Happy Roam Travel</span>
-      </a>
-      <a href="https://launchpilot.marketing" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-rocket"></i></span>
-        <span class="name">LaunchPilot</span>
-      </a>
-      <a href="https://unplugged.cv" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-file-text-o"></i></span>
-        <span class="name">Unplugged CV</span>
-      </a>
-      <a href="https://readmymind.me" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-lightbulb-o"></i></span>
-        <span class="name">Read My Mind</span>
-      </a>
-      <a href="https://parodyhumor.lol" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-smile-o"></i></span>
-        <span class="name">Parody Humor</span>
-      </a>
-      <a href="https://dailydog.dizid.com" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-paw"></i></span>
-        <span class="name">Daily Dog</span>
-      </a>
-      <a href="https://3p.tnxz.nl" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-balance-scale"></i></span>
-        <span class="name">3P Decision Maker</span>
-      </a>
-      <a href="https://crypto.tnxz.nl" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-bitcoin"></i></span>
-        <span class="name">Crypto Info</span>
-      </a>
-      <a href="http://site-improver.netlify.app" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-wrench"></i></span>
-        <span class="name">Site Improver</span>
-      </a>
-      <a href="http://mf-dizid.netlify.app" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-magic"></i></span>
-        <span class="name">MF Dizid</span>
-      </a>
-      <a href="https://tnxz.nl" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-link"></i></span>
-        <span class="name">URL Shortener</span>
-      </a>
-      <a href="https://geluk.tnxz.nl" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-heart"></i></span>
-        <span class="name">Find Happiness</span>
-      </a>
-      <a href="https://google4games.com" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-gamepad"></i></span>
-        <span class="name">Google 4 Games</span>
-      </a>
-      <a href="https://dizid.com" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-home"></i></span>
-        <span class="name">Dizid Homepage</span>
-      </a>
-      <a href="https://nft.tnxz.nl" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-picture-o"></i></span>
-        <span class="name">NFT Creator</span>
-      </a>
-      <a href="https://palmdetective.mystrikingly.com" target="_blank" class="app-card">
-        <span class="icon"><i class="fa fa-hand-paper-o"></i></span>
-        <span class="name">Palmdetective</span>
+    </div>
+
+    <!-- Grid view -->
+    <div v-else class="apps-grid">
+      <a v-for="app in apps" :key="app.url" :href="app.url" target="_blank" class="app-card">
+        <span class="icon"><i :class="'fa ' + app.icon"></i></span>
+        <span class="name">{{ app.name }}</span>
       </a>
     </div>
   </div>
@@ -101,11 +80,88 @@
   max-width: 700px;
 }
 
-h2 {
+/* View header with toggle */
+.view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 2.5rem;
   margin-bottom: 1.5rem;
 }
 
+.view-header h2 {
+  margin: 0;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.view-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--accent-bg);
+  color: var(--text-light, #888);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-toggle button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.view-toggle button.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+/* List view */
+.apps-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+  transition: background 0.15s;
+}
+
+.app-row:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.app-row:hover {
+  background: var(--accent-bg);
+}
+
+.app-row-name {
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+  min-width: 160px;
+}
+
+.app-row-desc {
+  color: var(--text-light, #888);
+  font-size: 0.9rem;
+}
+
+/* Grid view */
 .apps-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -155,7 +211,22 @@ h2 {
   line-height: 1.3;
 }
 
+/* Mobile */
 @media (max-width: 500px) {
+  .app-row {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.6rem 0.5rem;
+  }
+
+  .app-row-name {
+    min-width: unset;
+  }
+
+  .app-row-desc {
+    font-size: 0.8rem;
+  }
+
   .apps-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
