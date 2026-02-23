@@ -34,6 +34,17 @@ const router = createRouter({
       name: 'image-editor',
       component: () => import('../views/ImageEditor.vue')
     },
+    {
+      path: '/blog',
+      name: 'blog',
+      component: () => import('../views/BlogList.vue')
+    },
+    {
+      path: '/blog/:slug',
+      name: 'blog-post',
+      component: () => import('../views/BlogPost.vue'),
+      props: true
+    },
   ]
 })
 

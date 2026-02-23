@@ -7,10 +7,10 @@
     <RouterLink to="/love">Love calculator</RouterLink>
     <!-- <RouterLink to="/advice">Need advice?</RouterLink> -->
     <!-- <RouterLink to="/movie">Movies</RouterLink> -->
-    <RouterLink to="/grumpy-ai">Grumpy AI</RouterLink>
+    <!-- <RouterLink to="/grumpy-ai">Grumpy AI</RouterLink> -->
     <RouterLink to="/age">Guess your Age</RouterLink>
     <RouterLink to="/image-editor">Image Editor</RouterLink>
-
+    <RouterLink to="/blog">Blog</RouterLink>
   </nav>
   <main>
     <RouterView />

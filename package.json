@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@portabletext/vue": "^1.0.14",
+    "@sanity/client": "^7.15.0",
+    "@sanity/image-url": "^2.0.3",
     "axios": "^1.7.3",
     "dotenv": "^16.5.0",
     "openai": "^4.55.4",

@@ -86,7 +86,12 @@ Your test command
 Your migration commands
 Your seeding commands
 #### Deployment
-Your deployment commands
+- GitHub → Netlify webhook
+- Sanity Project ID: `834u69jd`
+- Sanity Dataset: `production`
+- Sanity Studio: `https://dizid-blog.sanity.studio` (pending deploy)
+- Sanity Org: `dizid` (o4VZ2GgEN)
+- Studio repo: `~/DEV/dizid-blog-studio`
 
 ### File Structure & Boundaries
 **SAFE TO MODIFY**:
