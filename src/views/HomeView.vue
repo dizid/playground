@@ -5,7 +5,7 @@ const viewMode = ref('list')
 
 const apps = [
   { name: 'Fluid 33', url: 'https://fluid33.netlify.app/', icon: 'fa-tint', description: 'Explore fluid intimacy through guided interactive experiences.' },
-  { name: 'Agent Eval', url: 'https://dizid-agenteval.netlify.app/', icon: 'fa-bar-chart', description: 'AI agent evaluation and marketplace platform.' },
+  { name: 'Agent Eval', url: 'https://hirefire.dev/', icon: 'fa-bar-chart', description: 'AI agent evaluation and marketplace platform.' },
   { name: 'TuneCraft', url: 'https://tunecraft.music', icon: 'fa-music', description: 'A personal music taste layer on top of YouTube.' },
   { name: 'Happy Roam Travel', url: 'https://happyroam.travel', icon: 'fa-plane', description: 'AI-powered personalized Thailand travel guide.' },
   { name: 'LaunchPilot', url: 'https://launchpilot.marketing', icon: 'fa-rocket', description: 'AI marketing automation platform for businesses.' },
