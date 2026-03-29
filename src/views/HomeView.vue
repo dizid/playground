@@ -26,6 +26,8 @@ const apps = [
   { name: 'FireHorse', url: 'https://firehorse.info/', icon: 'fa-fire', description: 'Year of the Fire Horse 2026 encyclopedia and zodiac tools.' },
   { name: 'Wu Xing Zodiac', url: 'https://wuxingzodiac.me/', icon: 'fa-refresh', description: 'Discover your Chinese zodiac sign from the 60 Five Element combinations.' },
   { name: 'StatPilot', url: 'https://statpilot.mom/', icon: 'fa-line-chart', description: 'Consolidate multiple GA4 properties into one dashboard.' },
+  { name: "Joe's Splat Factory", url: 'https://joes-splat-factory.netlify.app/', icon: 'fa-paint-brush', description: "Joe's colorful splat creation game." },
+  { name: 'Game Portal', url: 'https://game-portal-dizid.netlify.app/', icon: 'fa-gamepad', description: 'Play free browser games instantly — no download required.' },
 ]
 
 // Pad index to 2 digits
