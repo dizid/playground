@@ -11,6 +11,8 @@
     <RouterLink to="/age">Guess your Age</RouterLink>
     <RouterLink to="/image-editor">Image Editor</RouterLink>
     <RouterLink to="/blog">Blog</RouterLink>
+    <RouterLink to="/showcase">Showcase</RouterLink>
+    <RouterLink to="/story">Story</RouterLink>
   </nav>
   <main>
     <RouterView />
