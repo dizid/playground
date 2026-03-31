@@ -28,6 +28,10 @@ const apps = [
   { name: 'StatPilot', url: 'https://statpilot.mom/', icon: 'fa-line-chart', description: 'Consolidate multiple GA4 properties into one dashboard.' },
   { name: "Joe's Splat Factory", url: 'https://joes-splat-factory.netlify.app/', icon: 'fa-paint-brush', description: "Joe's colorful splat creation game." },
   { name: 'Game Portal', url: 'https://game-portal-dizid.netlify.app/', icon: 'fa-gamepad', description: 'Play free browser games instantly — no download required.' },
+  { name: 'Game Playbook', url: 'https://game-playbook-general.netlify.app/#designer', icon: 'fa-book', description: 'The Engagement Playbook — 24 rules for building addictive games.' },
+  { name: 'Love Calculator', url: '/love', icon: 'fa-heart', description: 'Calculate your love compatibility score.' },
+  { name: 'Guess Your Age', url: '/age', icon: 'fa-user', description: 'AI predicts your age from your first name.' },
+  { name: 'Image Editor', url: '/image-editor', icon: 'fa-crop', description: 'Advanced meme creation and image editing tool.' },
 ]
 
 // Pad index to 2 digits

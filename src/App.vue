@@ -4,15 +4,9 @@
   </header>
   <nav>
     <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/love">Love calculator</RouterLink>
-    <!-- <RouterLink to="/advice">Need advice?</RouterLink> -->
-    <!-- <RouterLink to="/movie">Movies</RouterLink> -->
-    <!-- <RouterLink to="/grumpy-ai">Grumpy AI</RouterLink> -->
-    <RouterLink to="/age">Guess your Age</RouterLink>
-    <RouterLink to="/image-editor">Image Editor</RouterLink>
-    <RouterLink to="/blog">Blog</RouterLink>
     <RouterLink to="/showcase">Showcase</RouterLink>
     <RouterLink to="/story">Story</RouterLink>
+    <RouterLink to="/blog">Blog</RouterLink>
   </nav>
   <main>
     <RouterView />
