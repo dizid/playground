@@ -29,6 +29,8 @@ const apps = [
   { name: "Joe's Splat Factory", url: 'https://joes-splat-factory.netlify.app/', icon: 'fa-paint-brush', description: "Joe's colorful splat creation game." },
   { name: 'Game Portal', url: 'https://game-portal-dizid.netlify.app/', icon: 'fa-gamepad', description: 'Play free browser games instantly — no download required.' },
   { name: 'Game Playbook', url: 'https://game-playbook-general.netlify.app/#designer', icon: 'fa-book', description: 'The Engagement Playbook — 24 rules for building addictive games.' },
+  { name: 'Reset Strategy', url: 'https://resetstrategy.io/', icon: 'fa-compass', description: 'Strategic intelligence platform for navigating global uncertainty.' },
+  { name: 'Alchemist Mirror', url: 'https://alchemist-mirror.netlify.app/', icon: 'fa-magic', description: 'Transformation and self-reflection through alchemical symbolism.' },
   { name: 'Love Calculator', url: '/love', icon: 'fa-heart', description: 'Calculate your love compatibility score.' },
   { name: 'Guess Your Age', url: '/age', icon: 'fa-user', description: 'AI predicts your age from your first name.' },
   { name: 'Image Editor', url: '/image-editor', icon: 'fa-crop', description: 'Advanced meme creation and image editing tool.' },

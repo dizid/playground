@@ -96,8 +96,8 @@ export const projects = [
   },
   {
     id: 'resetstrategie',
-    name: 'Reset Strategie',
-    url: 'https://resetstrategie.com',
+    name: 'Reset Strategy',
+    url: 'https://resetstrategy.io/',
     icon: 'fa-institution',
     description: 'Premium membership platform for financial education.',
     longDescription: '3 modular courses with drip content, tier-gated intelligence feed, expert consultation booking. Free / €29/mo Basic / €79/mo Premium.',
@@ -783,6 +783,27 @@ export const projects = [
       text: '#1f2937',
     },
     mockup: { type: 'cards' },
+  },
+
+  {
+    id: 'alchemistmirror',
+    name: 'Alchemist Mirror',
+    url: 'https://alchemist-mirror.netlify.app/',
+    icon: 'fa-magic',
+    description: 'Transformation and self-reflection through alchemical symbolism.',
+    longDescription: 'Explore the ancient art of alchemy as a metaphor for personal transformation. Interactive self-reflection experience using alchemical symbols and philosophy.',
+    category: 'personal',
+    year: 2025,
+    techStack: ['Vue 3', 'Netlify'],
+    revenue: false,
+    brand: {
+      bg: '#1a1a0e',
+      primary: '#c9a84c',
+      secondary: '#6b4c2a',
+      accent: '#e8d5a3',
+      text: '#f0e8d0',
+    },
+    mockup: { type: 'landing' },
   },
 
   // ── Playground Internal Apps ──
