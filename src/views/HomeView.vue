@@ -31,6 +31,7 @@ const apps = [
   { name: 'Game Playbook', url: 'https://game-playbook-general.netlify.app/#designer', icon: 'fa-book', description: 'The Engagement Playbook — 24 rules for building addictive games.' },
   { name: 'Reset Strategy', url: 'https://resetstrategy.io/', icon: 'fa-compass', description: 'Strategic intelligence platform for navigating global uncertainty.' },
   { name: 'Alchemist Mirror', url: 'https://alchemist-mirror.netlify.app/', icon: 'fa-magic', description: 'Transformation and self-reflection through alchemical symbolism.' },
+  { name: 'AI Content Factory', url: 'https://dizid-content-factory.netlify.app', icon: 'fa-video-camera', description: 'TikTok Shop automation for Thai affiliate business.' },
   { name: 'Love Calculator', url: '/love', icon: 'fa-heart', description: 'Calculate your love compatibility score.' },
   { name: 'Guess Your Age', url: '/age', icon: 'fa-user', description: 'AI predicts your age from your first name.' },
   { name: 'Image Editor', url: '/image-editor', icon: 'fa-crop', description: 'Advanced meme creation and image editing tool.' },
