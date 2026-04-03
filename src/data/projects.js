@@ -135,6 +135,27 @@ export const projects = [
     mockup: { type: 'form' },
   },
 
+  {
+    id: 'promoten',
+    name: 'Promoten',
+    url: 'https://promoten.pro/',
+    icon: 'fa-bullhorn',
+    description: 'Affiliate marketplace for indie app developers and promoters.',
+    longDescription: 'Two-sided marketplace connecting indie developers with promoters. One-line script integration, automatic conversion tracking via Stripe webhooks, monthly payouts via Stripe Connect Express.',
+    category: 'flagship',
+    year: 2025,
+    techStack: ['Vue 3', 'Neon DB', 'Stripe Connect', 'Netlify'],
+    revenue: true,
+    brand: {
+      bg: '#0c1220',
+      primary: '#3b82f6',
+      secondary: '#1e3a5f',
+      accent: '#f59e0b',
+      text: '#e2e8f0',
+    },
+    mockup: { type: 'dashboard' },
+  },
+
   // ── Content Platforms ──
   {
     id: 'firehorse',
