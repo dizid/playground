@@ -28,6 +28,7 @@ const apps = [
   { name: 'StatPilot', url: 'https://statpilot.mom/', icon: 'fa-line-chart', description: 'Consolidate multiple GA4 properties into one dashboard.' },
   { name: "Joe's Splat Factory", url: 'https://joes-splat-factory.netlify.app/', icon: 'fa-paint-brush', description: "Joe's colorful splat creation game." },
   { name: 'Game Portal', url: 'https://game-portal-dizid.netlify.app/', icon: 'fa-gamepad', description: 'Play free browser games instantly — no download required.' },
+  { name: 'Geopolitical Command', url: 'https://game-geo-politics.netlify.app', icon: 'fa-globe', description: 'Turn-based geopolitical strategy game powered by Claude AI.' },
   { name: 'Chess vs Grok AI', url: 'https://chess.google4games.com', icon: 'fa-trophy', description: 'Play chess against Grok AI with 3D board and move history.' },
   { name: 'Game Playbook', url: 'https://game-playbook-general.netlify.app/#designer', icon: 'fa-book', description: 'The Engagement Playbook — 24 rules for building addictive games.' },
   { name: 'Reset Strategy', url: 'https://resetstrategy.io/', icon: 'fa-compass', description: 'Strategic intelligence platform for navigating global uncertainty.' },
