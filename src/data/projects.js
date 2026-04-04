@@ -322,7 +322,7 @@ export const projects = [
   {
     id: 'chessgrok',
     name: 'Chess vs Grok AI',
-    url: 'https://chess-grok.netlify.app',
+    url: 'https://chess.google4games.com',
     icon: 'fa-chess-knight',
     description: 'Browser chess against Grok AI with 3D board toggle.',
     longDescription: '3-column layout with captured pieces & move history. 3D board toggle, check/checkmate indicators, undo moves.',
@@ -747,11 +747,11 @@ export const projects = [
   },
   {
     id: 'contentfactory',
-    name: 'AI Content Factory',
+    name: 'TikTok Creator Toolkit',
     url: 'https://dizid-content-factory.netlify.app',
     icon: 'fa-video-camera',
-    description: 'TikTok Shop automation for Thai affiliate business.',
-    longDescription: 'Thai-language script generator with Hook → Problem → Demo → Result → CTA formula. Product URL scraper, mobile-first dashboard.',
+    description: 'AI-powered toolkit for Thai TikTok creators — scripts, profiles & hooks.',
+    longDescription: 'Thai-language AI toolkit for TikTok creators. Script generator, profile optimizer, hook analyzer powered by Claude AI, plus free interactive lessons.',
     category: 'tools',
     year: 2025,
     techStack: ['Vue 3', 'TypeScript', 'Claude AI', 'Netlify'],
