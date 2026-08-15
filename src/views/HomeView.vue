@@ -36,9 +36,9 @@ const apps = [
   { name: 'Promoten', url: 'https://promoten.pro/', icon: 'fa-bullhorn', description: 'Affiliate marketplace for indie app developers and promoters.' },
   { name: 'TikTok Creator Toolkit', url: 'https://dizid-content-factory.netlify.app', icon: 'fa-video-camera', description: 'AI-powered toolkit for Thai TikTok creators — scripts, profiles & hooks.' },
   { name: 'ClientPilot', url: 'https://clientpilot-app.netlify.app/', icon: 'fa-briefcase', description: 'AI-powered freelance client acquisition — LinkedIn posts, outreach & articles.' },
+  { name: 'Thai Tones', url: 'https://thai-tones-dizid.netlify.app/', icon: 'fa-volume-up', description: 'Interactive Thai tone practice for language learners.' },
   { name: 'Love Calculator', url: '/love', icon: 'fa-heart', description: 'Calculate your love compatibility score.' },
   { name: 'Guess Your Age', url: '/age', icon: 'fa-user', description: 'AI predicts your age from your first name.' },
-  { name: 'Image Editor', url: '/image-editor', icon: 'fa-crop', description: 'Advanced meme creation and image editing tool.' },
 ]
 
 // Pad index to 2 digits

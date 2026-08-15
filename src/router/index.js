@@ -30,11 +30,6 @@ const router = createRouter({
       component: () => import('../views/ChatGPT.vue')
     },
     {
-      path: '/image-editor',
-      name: 'image-editor',
-      component: () => import('../views/ImageEditor.vue')
-    },
-    {
       path: '/blog',
       name: 'blog',
       component: () => import('../views/BlogList.vue')
